@@ -26,7 +26,7 @@
 		function offsetTop (element) {
 			var offsetParent = element[0].offsetParent,
 				marginDeduct = parseInt(element.css("margin-top")) || 0;
-			
+
 			if (glow.env.ie) {
 				while (offsetParent.currentStyle.position == "static") {
 					offsetParent = offsetParent.offsetParent;
@@ -49,7 +49,7 @@
 		@param {Object} [opts.draggableOptions] An options object to apply to each draggable.
 			See {@link glow.dragdrop.Draggable Draggable} for options
 		@param {Function} [opts.onSort] Create an event listener that is fired when the sortable is sorted - i.e. after one of the draggables has been dragged.
-		
+
 		*/
 
 		/**
@@ -67,7 +67,7 @@
 
 			var mySortable = new glow.widgets.Sortable('div#sections');
 			alert(mySortable.containers); // Returns a nodeList of all the sortable items
-		
+
 		*/
 
 		/**
@@ -102,8 +102,8 @@
 			this.axis = opts.axis;
 			this.draggables = [];
 
-			var containers = this.containers = $(containers),
-				dropTargets = this.dropTargets = [];
+			containers = this.containers = $(containers);
+			var	dropTargets = this.dropTargets = [];
 
 			if (opts.onSort) {
 				addListener(this, "sort", opts.onSort);
@@ -121,8 +121,8 @@
 			// draggables
 			this.addItems( containers.children() );
 		};
-			
-			
+
+
 		/**
 		@private
 		@name glow.widgets.Sortable#handleDrag
@@ -139,8 +139,9 @@
 			}
 			// stuff is in the air now...
 			this._itemsInMotion = true;
+            return undefined;
 		}
-		
+
 		/**
 		@private
 		@name glow.widgets.Sortable#equaliseColumns
@@ -177,7 +178,7 @@
 			var draggable = e.attachedTo,
 				el = draggable.element,
 				target = draggable.activeTarget;
-				
+
 		    this._previous = el.prev();
 			this._parent = el.parent();
 			if (target)	target.moveToPosition(draggable);
@@ -233,7 +234,7 @@
 						}, opts)
 					);
 
-					
+
 					addListener(draggable, 'drag', handleDrag, this_);
 					addListener(draggable, 'drop', handleDrop, this_);
 					addListener(draggable, 'afterDrop', handleAfterDrop, this_);

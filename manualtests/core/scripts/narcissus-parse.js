@@ -132,7 +132,7 @@ Tokenizer.prototype = {
             this.cursor += comment.length;
             newlines = comment.match(/\n/g);
             if (newlines)
-                this.lineno += newlines.length
+                this.lineno += newlines.length;
         }
 
         this.tokenIndex = (this.tokenIndex + 1) & 3;
@@ -219,8 +219,8 @@ function Script(t, x) {
 
 // Node extends Array, which we extend slightly with a top-of-stack method.
 Array.prototype.top = function() {
-    return this.length && this[this.length-1]; 
-}
+    return this.length && this[this.length-1];
+};
 
 function NarcNode(t, type) {
     var token = t.token();
@@ -254,7 +254,7 @@ Np.push = function (kid) {
     this[this.$length] = kid;
     this.$length++;
     //debug('length after => '+this.$length);
-}
+};
 
 NarcNode.indentLevel = 0;
 
@@ -278,7 +278,7 @@ Np.toString = function () {
     n = --NarcNode.indentLevel;
     s += "\n" + INDENTATION.repeat(n) + "}";
     return s;
-}
+};
 
 Np.getSource = function () {
     return this.tokenizer.source.slice(this.start, this.end);
@@ -291,7 +291,7 @@ String.prototype.repeat = function (n) {
     while (--n >= 0)
         s += t;
     return s;
-}
+};
 
 // Statement stack and nested statement handler.
 function nest(t, x, node, func, end) {
@@ -999,5 +999,5 @@ function parse(s, f, l) {
 debug = function(msg) {
     document.body.appendChild(document.createTextNode(msg));
     document.body.appendChild(document.createElement('br'));
-}
+};
 

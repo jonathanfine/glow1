@@ -177,20 +177,20 @@ t.test("Item Content creation", function() {
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / String / Timetable : correct tag");
 	t.equals(nodes[0].innerHTML, "/item - bar/", "getContent / String / Timetable : correct content");
 
-	myTimetable.setItemTemplate(function(item){return "[" + item.title + ":" + item.title.length + "] " + item.data.foo});
-	var nodes = myTimetable.tracks[0].items[0].getContent();
+	myTimetable.setItemTemplate(function(item){return "[" + item.title + ":" + item.title.length + "] " + item.data.foo;});
+	nodes = myTimetable.tracks[0].items[0].getContent();
 	t.equals(nodes.length, 1, "getContent / function(string) / Timetable : one node");
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / function(string) / Timetable : correct tag");
 	t.equals(nodes[0].innerHTML, "[item:4] bar", "getContent / function(string) / Timetable : correct content");
 
-	myTimetable.setItemTemplate(function(item){return glow.dom.create("<span>" + item.title + " / " + item.data.foo + "</span>")});
-	var nodes = myTimetable.tracks[0].items[0].getContent();
+	       myTimetable.setItemTemplate(function(item){return glow.dom.create("<span>" + item.title + " / " + item.data.foo + "</span>");});
+	nodes = myTimetable.tracks[0].items[0].getContent();
 	t.equals(nodes.length, 1, "getContent / function(nodelist) / Timetable : one node");
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / function(nodelist) / Timetable : correct tag");
 	t.equals(nodes[0].innerHTML.toLowerCase(), "<span>item / bar</span>", "getContent / function(nodelist) / Timetable : correct content");
 
 	myTimetable.setItemTemplate(glow.dom.create("<span>flat</span>"));
-	var nodes = myTimetable.tracks[0].items[0].getContent();
+	nodes = myTimetable.tracks[0].items[0].getContent();
 	t.equals(nodes.length, 1, "getContent / nodelist / Timetable : one node");
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / nodelist / Timetable : correct tag");
 	t.equals(nodes[0].innerHTML.toLowerCase(), "<span>flat</span>", "getContent / nodelist / Timetable : correct content");
@@ -198,7 +198,7 @@ t.test("Item Content creation", function() {
 	myTimetable.setItemTemplate("/error-timetable/");
 
 	myTimetable.tracks[0].setItemTemplate("^{title}^ {data.foo}");
-	var nodes = myTimetable.tracks[0].items[0].getContent();
+	nodes = myTimetable.tracks[0].items[0].getContent();
 	t.equals(nodes.length, 1, "getContent / String / track : one node");
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / String / track : correct tag");
 	t.equals(nodes[0].innerHTML, "^item^ bar", "getContent / String / track : correct content");
@@ -206,7 +206,7 @@ t.test("Item Content creation", function() {
 	myTimetable.tracks[0].setItemTemplate("/error-track/");
 
 	myTimetable.tracks[0].items[0].setItemTemplate("~{title}~ {data.foo}");
-	var nodes = myTimetable.tracks[0].items[0].getContent();
+	nodes = myTimetable.tracks[0].items[0].getContent();
 	t.equals(nodes.length, 1, "getContent / String / item : one node");
 	t.equals(nodes[0].tagName.toLowerCase(), "div", "getContent / String / item : correct tag");
 	t.equals(nodes[0].innerHTML, "~item~ bar", "getContent / String / item : correct content");
@@ -233,8 +233,8 @@ t.test("Header and Footer Content creation", function() {
 	myTimetable.tracks[0].setTrackHeaderTemplate("{title} TH");
 	myTimetable.tracks[0].setTrackFooterTemplate("{title} TF");
 
-	var headerNodes = myTimetable.tracks[0].getHeader();
-	var footerNodes = myTimetable.tracks[0].getFooter();
+	headerNodes = myTimetable.tracks[0].getHeader();
+	footerNodes = myTimetable.tracks[0].getFooter();
 
 	t.equals(headerNodes.length, 1, "header one node");
 	t.equals(headerNodes[0].tagName.toLowerCase(), "div", "header correct tag");
@@ -257,10 +257,10 @@ t.test("Timetable banding data", function() {
 	numLine.setBanding(20, {start: 10});
 	t.ok(arrEquals([10,30,50,70,90,110], numLine._banding), "numbers / custom start");
 
-	numLine.setBanding(function (prev){return ((prev + 1) * 2)});
+	numLine.setBanding(function (prev){return ((prev + 1) * 2);});
 	t.ok(arrEquals([0, 2, 6, 14, 30, 62, 126], numLine._banding), "function / default start");
 
-	numLine.setBanding(function (prev){return ((prev + 1) * 2)}, {start: 10});
+	numLine.setBanding(function (prev){return ((prev + 1) * 2);}, {start: 10});
 	t.ok(arrEquals([10, 22, 46, 94, 190], numLine._banding), "function / custom start");
 
 	numLine.setBanding([1,5,9]);
@@ -272,11 +272,11 @@ t.test("Timetable banding data", function() {
 	dateLine.setBanding("month", {start: new Date(2009,0,10)});
 	t.ok(arrEquals([new Date(2009, 0, 10), new Date(2009, 1, 10), new Date(2009, 2, 10), new Date(2009, 3, 10)], dateLine._banding), "dates / month / custom start");
 
-	var dateLine = new glow.widgets.Timetable(glow.dom.create("<p></p>"), new Date(2009, 3, 1), new Date(2012, 0, 1), new Date(2009, 1, 1), new Date(2009, 2, 1));
+	dateLine = new glow.widgets.Timetable(glow.dom.create("<p></p>"), new Date(2009, 3, 1), new Date(2012, 0, 1), new Date(2009, 1, 1), new Date(2009, 2, 1));
 	dateLine.setBanding("year");
 	t.ok(arrEquals([new Date(2009, 0, 1), new Date(2010, 0, 1), new Date(2011, 0, 1), new Date(2012, 0, 1)], dateLine._banding), "dates / year / auto start");
 
-	var dateLine = new glow.widgets.Timetable(glow.dom.create("<p></p>"), new Date(2009, 0, 1), new Date(2009, 0, 2), new Date(2009, 0, 1), new Date(2009, 0, 2));
+	dateLine = new glow.widgets.Timetable(glow.dom.create("<p></p>"), new Date(2009, 0, 1), new Date(2009, 0, 2), new Date(2009, 0, 1), new Date(2009, 0, 2));
 	dateLine.setBanding(8 * 60 * 60 * 1000);
 	t.ok(arrEquals([new Date(2009, 0, 1, 0), new Date(2009, 0, 1, 8), new Date(2009, 0, 1, 16), new Date(2009, 0, 2)], dateLine._banding), "dates / interval / default start");
 

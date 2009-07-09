@@ -30,7 +30,7 @@ var ManualTestCase = function () {
 
 	ManualTestCase.prototype.start = function () {
 		var res = this.setupTest();
-		if (typeof res == 'boolean' && ! res) { return; }
+		if (typeof res == 'boolean' && ! res) { return undefined; }
 		this.removeStartButton();
 		this.addResetButton();
 		this.container.removeClass("not-started");
@@ -103,7 +103,7 @@ var ManualTestCase = function () {
 	};
 
 	/* diagnostics */
-	
+
 	ManualTestCase.prototype.diag = function (msg) {
 		var diag = glow.dom.create("<li></li>");
 		diag.text(msg);
@@ -122,7 +122,7 @@ var ManualTestCase = function () {
 	/* success */
 
 	ManualTestCase.prototype.addSuccessMessage = function () {
-		this.container.get(".test-name").parent().append('<span class="success">success</span>')
+		this.container.get(".test-name").parent().append('<span class="success">success</span>');
 		this.container.append('<p class="success">Test Passed</p>');
 	};
 
@@ -179,7 +179,7 @@ function setVerbose (ck) {
 		testCases.removeClass("quiet");
 	} else {
 		testCases.addClass("quiet");
-	}	
+	}
 }
 
 glow.events.addListener(

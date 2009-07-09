@@ -61,14 +61,14 @@
 			if (hideWhileShown) { thingsToHide.push($(hideWhileShown)); }
 			//get rid of stuff the user doesn't want hidden
 			if (hideFilter) { thingsToHide = thingsToHide.filter(hideFilter); }
-			
+
 			overlay._hiddenElements = thingsToHide;
-			
-			for (var i = 0, thingsToHideLen = thingsToHide.length; i < thingsToHideLen; i++) {
+
+			for (i = 0, thingsToHideLen = thingsToHide.length; i < thingsToHideLen; i++) {
 				// update how many times this item has been hidden by a glow overlay
-				// this lets multiple overlays hide the same element 
+				// this lets multiple overlays hide the same element
 				thingsToHide[i].__glowOverlayHideCount = (Number(thingsToHide[i].__glowOverlayHideCount) || 0) + 1;
-				
+
 				if (thingsToHide[i].__glowOverlayHideCount == 1) {
 					// this is the first attempt to hide the element, so we need to actually hide it
 					// also store the current value for visibility
@@ -116,7 +116,7 @@
 			var hiddenElements = overlay._hiddenElements,
 				i = 0,
 				len = hiddenElements.length;
-			
+
 			for (; i < len; i++) {
 				// only show the element again if its hide count reaches zero
 				if ( --hiddenElements[i].__glowOverlayHideCount == 0 ) {
@@ -158,7 +158,7 @@
 					)
 				];
 				if (show) {
-					channels[chansLen - 1][1] = function() { container.css("opacity", "") };
+					channels[chansLen - 1][1] = function() { container.css("opacity", ""); };
 				}
 				channels[chansLen++] = [generateMaskAnimation(overlay, show)];
 			} else if (preset == "roll" || preset == "slide") {
@@ -217,7 +217,7 @@
 						to: (show ? maskOpacity : 0)
 					}
 				}
-			)
+			);
 		}
 
 		/*
@@ -312,11 +312,11 @@
 			@event
 			@description Fired when the overlay is about to appear on the screen, before any animation.
 
-				At this	point you can access the content of the overlay and make changes 
+				At this	point you can access the content of the overlay and make changes
 				before it is shown to the user. If you prevent the default action of this
-				event (by returning false or calling event.preventDefault) the overlay 
+				event (by returning false or calling event.preventDefault) the overlay
 				will not show.
-			
+
 			@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -325,9 +325,9 @@
 			@description Fired when the overlay is visible to the user and any 'show' animation is complete
 
 				This event is ideal to assign focus to a particular part of	the overlay.
-				If you want to change content of the overlay before it appears, see the 
+				If you want to change content of the overlay before it appears, see the
 				'show' event.
-			
+
 			@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -335,9 +335,9 @@
 			@event
 			@description Fired when the overlay is about to hide
 
-				If you prevent the default action of this event (by returning false or 
+				If you prevent the default action of this event (by returning false or
 				calling event.preventDefault) the overlay will not hide.
-			
+
 			@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -366,7 +366,7 @@
 				focusOnShow: false,
 				id: "glowCSSVERSIONOverlay" + (++overlayCount)
 			}, opts);
-			
+
 			// generate a default mask if needed
 			if (opts.modal && !opts.mask) {
 				opts.mask = new glow.widgets.Mask(opts.zIndex ? {zIndex: opts.zIndex-1} : {});
@@ -397,7 +397,7 @@
 			@type glow.dom.NodeList
 			*/
 			this._focalPoint = overlayNode.get("div.overlay-focalPoint");
-			
+
 			/**
 			@name glow.widgets.Overlay#_hiddenElements
 			@private
@@ -405,7 +405,7 @@
 			@type Node[]
 			*/
 			this._hiddenElements = [];
-			
+
 			/**
 			@name glow.widgets.Overlay#_blockScrollRepos
 			@private
@@ -418,7 +418,7 @@
 
 			// ensure the overlay has a unique ID, this is used by aria to point at this overlay
 			overlayNode[0].id = opts.id;
-			
+
 			// add any class names from the user
 			overlayNode[0].className += " " + (opts.className || "");
 
@@ -506,10 +506,10 @@
 						this.opts.x = x;
 						this.opts.y = y;
 					}
-					var win = $(window),
-						x = this.opts.x,
-						y = this.opts.y,
-						xVal = parseFloat(this.opts.x),
+					var win = $(window);
+				    x = this.opts.x;
+					y = this.opts.y;
+					var	xVal = parseFloat(this.opts.x),
 						yVal = parseFloat(this.opts.y),
 						blockScrollPos = this._blockScrollRepos,
 						useFixedThisTime = useFixed && (!blockScrollPos.x) && (!blockScrollPos.y),

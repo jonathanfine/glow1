@@ -25,69 +25,69 @@ t.test("Simple DOM Ready testing", function() {
 	glow.ready(function() {
 		t.ok(firstFired, "glow.ready() 2nd in queue");
 		t.start();
-	})
+	});
 });
 
 t.test("DOM Ready Blocking testing", function() {
 	// we can assume the DOM is ready at this stage
 	t.expect(7);
 	var results = "";
-	
+
 	glow._addReadyBlock("test1");
-	
+
 	glow.ready(function() {
 		results += "1";
 	});
 	glow.ready(function() {
 		results += "2";
 	});
-	
+
 	t.equals(results, "", "glow.ready correctly blocked");
 
 	glow._removeReadyBlock("test1");
-	
+
 	t.equals(results, "12", "glow.ready queue run in order");
-	
+
 	glow.ready(function() {
 		results += "3";
 	});
-	
+
 	t.equals(results, "123", "glow.ready unblocked");
-	
+
 	glow._addReadyBlock("test2");
 	glow._addReadyBlock("test3");
-	
+
 	glow.ready(function() {
 		results += "4";
 	});
 	glow.ready(function() {
 		results += "5";
 	});
-	
+
 	t.equals(results, "123", "glow.ready blocked");
-	
+
 	glow._removeReadyBlock("test2");
-	
+
 	t.equals(results, "123", "glow.ready still blocked");
-	
+
 	glow._removeReadyBlock("test3");
-	
+
 	t.equals(results, "12345", "glow.ready queue run in order");
-	
+
 	glow.ready(function() {
 		results += "6";
 	});
-	
+
 	t.equals(results, "123456", "glow.ready unblocked");
 });
 
 t.test("DOM Ready nested blocking", function() {
 	t.expect(4);
-	
+
 	var results = "";
-	
+
 	glow._addReadyBlock("test4");
-	
+
 	glow.ready(function() {
 		results += "1";
 		glow._addReadyBlock("test5");
@@ -96,29 +96,29 @@ t.test("DOM Ready nested blocking", function() {
 		});
 		glow._removeReadyBlock("test5");
 	});
-	
+
 	t.equals(results, "", "glow.ready blocked");
-	
+
 	glow._removeReadyBlock("test4");
-	
+
 	t.equals(results, "12", "glow.ready unblocked & queue run");
-	
+
 	glow.ready(function() {
-		results += "3"
+		results += "3";
 	});
-	
+
 	t.equals(results, "123", "glow.ready unblocked");
 	t.equals(glow.isReady, true, "glow.isReady");
-	
+
 });
 
 t.test("DOM Ready split blocking", function() {
 	t.expect(3);
-	
+
 	var results = "";
-	
+
 	glow._addReadyBlock("test6");
-	
+
 	glow.ready(function() {
 		results += "1";
 		glow._addReadyBlock("test7");
@@ -126,15 +126,15 @@ t.test("DOM Ready split blocking", function() {
 			results += "2";
 		});
 	});
-	
+
 	t.equals(results, "", "glow.ready blocked");
-	
+
 	glow._removeReadyBlock("test6");
-	
+
 	t.equals(results, "1", "glow.ready unblocked & queue run");
-	
+
 	glow._removeReadyBlock("test7");
-	
+
 	t.equals(results, "12", "glow.ready unblocked & queue run");
 });
 
@@ -219,7 +219,7 @@ t.test("glow.env", function() {
 		t.ok(false, "Browser unknown");
 	}
 	t.ok(glow.env.version && typeof glow.env.version == "string", "Version populated: '" + glow.env.version + "'");
-})
+});
 
 t.module("glow.lang");
 
@@ -300,7 +300,7 @@ t.test("glow.lang.interpolate()", function() {
 	);
 
 	t.equals(
-		glow.lang.interpolate("{foo.foo} is {bar.bar.bar}, but not {foo.bar}. Nevermind {foo} or {nope}", {foo: {foo: "FFOO", toString: function() {return "[oFoo]"}}, bar: {bar: {bar: "BBBAR"}}}),
+		glow.lang.interpolate("{foo.foo} is {bar.bar.bar}, but not {foo.bar}. Nevermind {foo} or {nope}", {foo: {foo: "FFOO", toString: function() {return "[oFoo]";}}, bar: {bar: {bar: "BBBAR"}}}),
 		"FFOO is BBBAR, but not {foo.bar}. Nevermind [oFoo] or {nope}",
 		"Nested objects"
 	);
@@ -370,7 +370,7 @@ t.test("glow.lang.hasOwnProperty()", function() {
 	t.expect(8);
 	var MyClass = function() { //assigning like this makes obj.constructor wrong in Safari 1.3
 		this.a = 10;
-	}
+	};
 	MyClass.prototype.x = 100;
 	MyClass.prototype.y = 200;
 	MyClass.prototype.z = "test";
@@ -405,7 +405,7 @@ t.test("glow.lang.map()", function() {
 			t.ok(this == test1, "Array is 'this'");
 		}
 		t.equals(count, i, "Index passed in");
-		t.equals(test1[count], item, "Item correctly set")
+		t.equals(test1[count], item, "Item correctly set");
 
 		count++;
 
@@ -419,7 +419,7 @@ t.test("glow.lang.map()", function() {
 			t.equals(this, "test", "'this' can be user set");
 		}
 	}, "test");
-})
+});
 
 t.test("glow.lang.extend()", function() {
 	t.expect(12);
@@ -429,7 +429,7 @@ t.test("glow.lang.extend()", function() {
 	var BaseClass = function() {
 		this.a = "From Base";
 		this.b = "From Base";
-	}
+	};
 	BaseClass.prototype = {
 		c: function() {
 			return "From Base";
@@ -442,7 +442,7 @@ t.test("glow.lang.extend()", function() {
 		BaseClass.call(this);
 		this.b = "From Sub";
 		this.e = "From Sub";
-	}
+	};
 	glow.lang.extend(SubClass, BaseClass, {
 		d: function() {
 			return "From Sub";
@@ -468,7 +468,7 @@ t.test("glow.lang.extend()", function() {
 	t.equals(SubClass.base, BaseClass, "sub.base property set");
 
 
-})
+});
 
 t.test("glow.lang.clone()", function() {
 	t.expect(4);
@@ -485,6 +485,6 @@ t.test("glow.lang.clone()", function() {
 	t.equals( clonedObject.hello, "space", "clonedObject.hello property should now read space");
 	t.equals( testObject.hello, "world", "testObject.hello property should still read world");
 
-})
+});
 
 

@@ -16,7 +16,7 @@ cssQuery.addModule("css-level3", function() {
 selectors["~"] = function($results, $from, $tagName, $namespace) {
 	var $element, i;
 	for (i = 0; ($element = $from[i]); i++) {
-		while ($element = nextElementSibling($element)) {
+		while (($element = nextElementSibling($element))) {
 			if (compareTagName($element, $tagName, $namespace))
 				$results.push($element);
 		}
@@ -123,7 +123,7 @@ function nthChild($element, $arguments, $traverse) {
 
 	var $$children = childElements($element.parentNode);
 	function _checkIndex($index) {
-		var $index = ($traverse == nextElementSibling) ? $$children.length - $index : $index - 1;
+		$index = ($traverse == nextElementSibling) ? $$children.length - $index : $index - 1;
 		return $$children[$index] == $element;
 	};
 
@@ -139,7 +139,7 @@ function nthChild($element, $arguments, $traverse) {
 	if (isNaN($step)) $step = 0;
 
 	var $count = 1;
-	while ($element = $traverse($element)) $count++;
+	while (($element = $traverse($element))) $count++;
 
 	if (isNaN($multiplier) || $multiplier == 1)
 		return ($traverse == nextElementSibling) ? ($count <= $step) : ($step >= $count);

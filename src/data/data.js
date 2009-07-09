@@ -24,7 +24,7 @@
 			ARRAY     : "array",
 			FUNCTION  : "function",
 			NULL      : "null"
-		}
+		};
 
 		/*
 		PrivateProperty: TEXT
@@ -38,7 +38,7 @@
 			AND   : "&",
 			OPEN  : "(",
 			CLOSE : ")"
-		}
+		};
 
 		/*
 		PrivateProperty: JSON
@@ -66,7 +66,7 @@
 			SAFE_PT2 : /\\./g,
 			SAFE_PT3 : /\"[^\"\\\n\r]*\"|true|false|null|-?\d+(?:\.\d*)?(:?[eE][+\-]?\d+)?/g,
 			SAFE_PT4 : /(?:^|:|,)(?:\s*\[)+/g
-		}
+		};
 
 		/*
 		PrivateProperty: SLASHES
@@ -81,7 +81,7 @@
 			F : {PLAIN : "\f", ESC : "\\f"},
 			SL : {PLAIN : "\\", ESC : "\\\\"},
 			QU : {PLAIN : "\"", ESC : "\\\""}
-		}
+		};
 
 		/*
 		PrivateMethod: _getType
@@ -134,19 +134,19 @@
 			@name glow.data.encodeUrl
 			@function
 			@description Encodes an object for use as a query string.
-			
-				Returns a string representing the object suitable for use 
+
+				Returns a string representing the object suitable for use
 				as a query string, with all values suitably escaped.
-				It does not include the initial question mark. Where the 
+				It does not include the initial question mark. Where the
 				input field was an array, the key is repeated in the output.
-			
+
 			@param {Object} object The object to be encoded.
-			
-				This must be a hash whose values can only be primitives or 
+
+				This must be a hash whose values can only be primitives or
 				arrays of primitives.
-			
+
 			@returns {String}
-			
+
 			@example
 				var getRef = glow.data.encodeUrl({foo: "Foo", bar: ["Bar 1", "Bar2"]});
 				// will return "foo=Foo&bar=Bar%201&bar=Bar2"
@@ -190,18 +190,18 @@
 			@name glow.data.decodeUrl
 			@function
 			@description Decodes a query string into an object.
-			
-				Returns an object representing the data given by the query 
-				string, with all values suitably unescaped. All keys in the 
-				query string are keys of the object. Repeated keys result 
+
+				Returns an object representing the data given by the query
+				string, with all values suitably unescaped. All keys in the
+				query string are keys of the object. Repeated keys result
 				in an array.
-			
+
 			@param {String} string The query string to be decoded.
-			
+
 				It should not include the initial question mark.
-			
+
 			@returns {Object}
-			
+
 			@example
 				var getRef = glow.data.decodeUrl("foo=Foo&bar=Bar%201&bar=Bar2");
 				// will return the object {foo: "Foo", bar: ["Bar 1", "Bar2"]}
@@ -245,16 +245,16 @@
 			@name glow.data.encodeJson
 			@function
 			@description Encodes an object into a string JSON representation.
-			
+
 				Returns a string representing the object as JSON.
-			
+
 			@param {Object} object The object to be encoded.
-			 
-				This can be arbitrarily nested, but must not contain 
+
+				This can be arbitrarily nested, but must not contain
 				functions or cyclical structures.
-			
+
 			@returns {Object}
-			
+
 			@example
 				var myObj = {foo: "Foo", bar: ["Bar 1", "Bar2"]};
 				var getRef = glow.data.encodeJson(myObj);
@@ -332,24 +332,24 @@
 			@name glow.data.decodeJson
 			@function
 			@description Decodes a string JSON representation into an object.
-				
+
 				Returns a JavaScript object that mirrors the data given.
-			
+
 			@param {String} string The string to be decoded.
-				Must be valid JSON. 
-			
+				Must be valid JSON.
+
 			@param {Object} opts
-			
+
 					Zero or more of the following as properties of an object:
-					@param {Boolean} [opts.safeMode=false] Whether the string should only be decoded if it is  deemed "safe". 
-					The json.org regular expression checks are used. 
-			
+					@param {Boolean} [opts.safeMode=false] Whether the string should only be decoded if it is  deemed "safe".
+					The json.org regular expression checks are used.
+
 			@returns {Object}
-			
+
 			@example
 				var getRef = glow.data.decodeJson('{foo: "Foo", bar: ["Bar 1", "Bar2"]}');
 				// will return {foo: "Foo", bar: ["Bar 1", "Bar2"]}
-			
+
 				var getRef = glow.data.decodeJson('foobar', {safeMode: true});
 				// will throw an error
 			*/
@@ -380,23 +380,23 @@
 			@name glow.data.escapeHTML
 			@function
 			@description Escape HTML entities.
-			
+
 				Returns a string with HTML entities escaped.
-			
+
 			@param {String} string The string to be escaped.
-			
+
 			@returns {String}
-			
+
 			@example
 				// useful for protecting against XSS attacks:
 				var fieldName = '" onclick="alert(\'hacked\')" name="';
-			
+
 				// but should be used in all cases like this:
 				glow.dom.create('<input name="' + glow.data.escapeHTML(untrustedString) + '"/>');
 			 */
 			escapeHTML : function (html) {
 				return glow.dom.create('<div></div>').text(html).html();
-			}		   
+			}
 		};
 	}
 });

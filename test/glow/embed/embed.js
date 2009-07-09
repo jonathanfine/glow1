@@ -12,14 +12,14 @@ t.test("Load DOM", function() {
 t.test("Test Embedding", function() {
 
 	t.expect(6);
-	
+
 	var $ = glow.dom.get;
-	
+
 	var flashHolder = glow.dom.create('<div id="flashTest"></div>').appendTo("body");
-	
+
 	var embed_tag = glow.env.ie ? "object" : "embed";
-	
-	// see, nothing up my sleeve...	
+
+	// see, nothing up my sleeve...
 	t.ok($("#flashTest " + embed_tag).length==0,"no embed element exists");
 
 	try {
@@ -33,12 +33,12 @@ t.test("Test Embedding", function() {
 	}
 
 	movie.embed();
-	
+
 	if (!movie.movie) {
 	  t.skip("Flash 9 or greater required");
 	}
-	
-	t.ok(movie.movie.nodeName.toLowerCase() == embed_tag, "Movie property references Flash")
+
+	t.ok(movie.movie.nodeName.toLowerCase() == embed_tag, "Movie property references Flash");
 
 	t.ok($("#flashTest " + embed_tag).length==1,"after call to embed, we have an embedded object");
 
@@ -48,10 +48,10 @@ t.test("Test Embedding", function() {
 t.test("Test Flash fails without required parameters", function() {
 
 	t.expect(3);
-	
+
 	var $ = glow.dom.get;
 	var flashHolder = glow.dom.create('<div id="flashTest"></div>').appendTo("body");
-	
+
 	var embed_tag = glow.env.ie ? "object" : "embed";
 
 	try {
@@ -77,7 +77,7 @@ t.test("Test Flash fails without required parameters", function() {
 	catch(e){
 		t.ok(true,"calling Flash with missing required parameters " + e.message);
 	}
-	
+
 	flashHolder.remove();
 });
 
@@ -86,7 +86,7 @@ t.test("check version checking", function() {
 	t.expect(4);
 	var flashHolder = glow.dom.create('<div id="flashTest"></div>').appendTo("body");
 
-	
+
 	try {
 		new glow.embed.Flash("anyold.swf","#flashTest","99").embed();
 		t.ok(glow.dom.get("#flashTest")[0].innerHTML.match(/This content requires Flash Player version 99/) != null,"Default Error message is displayed");
@@ -104,7 +104,7 @@ t.test("check version checking", function() {
 	}
 
 	try {
-		new glow.embed.Flash("anyold.swf","#flashTest","99",{message:function(){return "a custom message"}}).embed();
+		new glow.embed.Flash("anyold.swf","#flashTest","99",{message:function(){return "a custom message";}}).embed();
 		t.ok(glow.dom.get("#flashTest")[0].innerHTML == "a custom message","Custom Error message from function is displayed");
 	}
 	catch(e){
@@ -148,13 +148,13 @@ t.test("check that supplied attributes are set correctly", function() {
 		t.ok($("#testFlash")[0].getAttribute("blat") == "gret","set arbitrary attribute");
 		//wmode test
 		if (glow.env.ie) {
-		  t.ok($("#testFlash").children().filter(function() { return this.name == "wmode" }).attr("value") == "transparent", "transparent wmode set (param)")
+		    t.ok($("#testFlash").children().filter(function() { return this.name == "wmode" }).attr("value") == "transparent", "transparent wmode set (param)");
 		} else {
 		  t.ok($("#testFlash")[0].getAttribute("wmode") == "transparent", "transparent wmode set (attr)");
 		}
 		//flashvars test
 		if (glow.env.ie) {
-		  t.equals($("#testFlash").children().filter(function() { return this.name == "FlashVars" }).attr("value"), "hello=world&foo=bar", "flashvars (param)")
+		    t.equals($("#testFlash").children().filter(function() { return this.name == "FlashVars" }).attr("value"), "hello=world&foo=bar", "flashvars (param)");
 		} else {
 		  t.equals($("#testFlash")[0].getAttribute("FlashVars"), "hello=world&foo=bar", "flashvars (attr)");
 		}
@@ -171,12 +171,12 @@ t.test("Shortcut attribute setting", function() {
   t.expect(2);
   var $ = glow.dom.get;
   var flashHolder = glow.dom.create('<div id="flashTest"></div>').appendTo("body");
-  
+
   var myFlash = new glow.embed.Flash("anyold.swf","#flashTest","6",{
 	id: "newIdValue",
 	className: "someClassName"
   }).embed();
-  
+
   t.equals(myFlash.movie.id, "newIdValue", "ID");
   t.equals(myFlash.movie.className, "someClassName", "className");
 
@@ -193,13 +193,13 @@ t.test("check correct defaults for missing parameters", function() {
 
 	new glow.embed.Flash("anyold.swf","#flashTest","6").embed();
 	var embed = $("#flashTest " + embed_tag)[0];
-	
+
 	try {
 		//not using getAttribute for the first two as some browsers give empty strings while others give null
 		t.ok(embed.id == "","no id by default");
 		t.ok(embed.name == "","no name by default");
 		if (glow.env.ie) {
-		  t.ok($(embed).children().filter(function() { return this.name == "allowscriptaccess" }).attr("value") == "always", "allowscriptaccess:always");
+		    t.ok($(embed).children().filter(function() { return this.name == "allowscriptaccess"; }).attr("value") == "always", "allowscriptaccess:always");
 		} else {
 		  t.ok(embed.getAttribute("allowscriptaccess") == "always","allowscriptaccess:always");
 		}

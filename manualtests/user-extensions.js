@@ -1,6 +1,6 @@
 // Collates data from each test to build report
 Selenium.prototype.doAddTestResult = function() {
-    
+
 	if (!window.glowReport) window.glowReport = '';
 
 	var iframeDoc = getIframeDocument('testFrame');
@@ -18,6 +18,7 @@ Selenium.prototype.doAddTestResult = function() {
 
 	window.glowReport += report;
 
+    return undefined;
 };
 
 // Builds report
@@ -27,18 +28,18 @@ Selenium.prototype.doBuildReport = function() {
 
 	var iframeDoc = getIframeDocument('selenium_myiframe');
 	if (!iframeDoc) return false;
-	
+
 	iframeDoc.getElementsByTagName('BODY')[0].innerHTML = window.glowReport;
 
 	window.glowReport = '';
-
-}
+    return undefined;
+};
 
 // Helper func to get document object from iFrame.
 function getIframeDocument(iframeId)
 {
 	return document.getElementById(iframeId).contentWindow.document;
-	
+
 	// If none of the IF statements catch then return false.
 	//console.error('ERROR with REPORT BUILER');
 	return false;

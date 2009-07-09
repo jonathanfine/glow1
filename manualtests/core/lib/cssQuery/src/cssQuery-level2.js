@@ -75,7 +75,7 @@ AttributeSelector.replace = function($match, $attribute, $namespace, $compare, $
 AttributeSelector.parse = function($selector) {
 	$selector = $selector.replace(this.NS_IE, "|");
 	var $match;
-	while ($match = $selector.match(this.match)) {
+	while (($match = $selector.match(this.match))) {
 		var $replace = this.replace($match[0], $match[1], $match[2], $match[3], $match[4]);
 		$selector = $selector.replace(this.match, $replace);
 	}

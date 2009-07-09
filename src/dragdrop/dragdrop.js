@@ -212,13 +212,13 @@
 			*/
 			offsetParentPageTop: function () {
 				var el = this.el[0], pos, top;
-				while (el = el.offsetParent) {
+				while ((el = el.offsetParent)) {
 					pos = $(el).css('position');
 					if (pos == 'absolute' || pos == 'fixed' || pos == 'relative') break;
 				}
 				if (! el) return 0;
   				top = el.offsetTop;
-				while (el = el.offsetParent) {
+				while ((el = el.offsetParent)) {
 					top += el.offsetTop;
 				}
 				return top;
@@ -235,7 +235,7 @@
 			offsetTop: function () {
 				var offsetParent = this.el[0].offsetParent,
 					marginDeduct = parseInt(this.el.css("margin-top")) || 0;
-				
+
 				if (glow.env.ie) {
 					while (offsetParent && offsetParent.currentStyle.position == "static") {
 						offsetParent = offsetParent.offsetParent;
@@ -258,13 +258,13 @@
 					marginDeduct = parseInt(this.el.css("margin-left")) || 0,
 					//this is for IE6 only, which does absolute positions CACKLY (see below)
 					paddingLeftDeduct = 0;
-				
+
 				if (glow.env.ie) {
 					while (offsetParent && offsetParent.currentStyle.position == "static") {
 						offsetParent = offsetParent.offsetParent;
 					}
 					offsetParent = $(offsetParent || document.body);
-					
+
 					//IE6 positions things horizontally within the padding
 					if (glow.env.ie == 6) {
 						paddingLeftDeduct = parseInt(offsetParent.css("padding-left"));
@@ -759,7 +759,7 @@
 
 			By default dragging will not work when the user clicks in form
 			elements, otherwise these elements would be unusable.
-			
+
 		@param {Number|Object} [opts.step=1] The pixel interval the draggable snaps to.
 			If a number, the draggable will step by that number of pixels on the x and y axis. You
 			can provide an object in the form <code>{x:2, y:4}</code> to set different steps to each
@@ -772,14 +772,14 @@
 		@param {Function} [opts.onLeave] An event listener that fires when the draggable is dragged out of a drop target.
 
 		@param {Function} [opts.onDrop] An event listener that fires when the draggable is dropped.
-		
+
 		@param {Function} [opts.onAfterDrop] An event listener that fires after the element has dropped, including any animations
 
 			The default action is to animate the draggable back to it's start
 			position. This can be cancelled by returning false from the listener
 			or calling {@link glow.events.Event.preventDefault} on the
 			{@link glow.events.Event} param.
-			
+
 		@example
 			// create a draggable element with a corresponding DropTarget,
 			// container and two event listeners
@@ -801,7 +801,7 @@
 
 			Concelling this event results in the user being unable to pick up
 			the draggable.
-		
+
 		@param {glow.events.Event} event Event Object
 	*/
 	/**
@@ -842,7 +842,7 @@
 				placeholderClass : 'glow-dragdrop-placeholder',
 				step			 : {x:1, y:1}
 			}, opts || {});
-			
+
 			//normalise the step param to an object
 			if (typeof opts.step == "number") {
 				opts.step = {x: opts.step, y: opts.step};
@@ -867,8 +867,8 @@
 				//get('body')[0].style.overflow = 'auto';
 				//this._opts = o, this._targetCoords = [], this.isOverTarget = false;
 
-			var listeners = this._listeners = [],
-				i = 0;
+			var listeners = this._listeners = [];
+			i = 0;
 
 			if (opts.onDrag)  listeners[i++] = addListener(this, 'drag',  this._opts.onDrag,  this);
 			if (opts.onEnter) listeners[i++] = addListener(this, 'enter', this._opts.onEnter, this);
@@ -1011,20 +1011,20 @@
 
 				for (var i = 0, l = preventDrag.length; i < l; i++) {
 					if (preventDrag[i] == tag) {
-						return;
+						return undefined;
 					}
 				}
-				
+
 				//fire the drag event
 				if (fire(this, 'drag').defaultPrevented()) {
 					//the default action was prevented, don't do any dragging
-					return;
+					return undefined;
 				}
 
 				if (this._dragging == 1)
 					return this.endDrag();
 				else if (this._dragging)
-					return;
+					return undefined;
 
 				// _dragging set to 1 during drag, 2 while ending drag and back to 0 when ready for new drag
 				this._dragging = 1;
@@ -1036,12 +1036,12 @@
 					step = opts.step;
 
 				this._preDragPosition = el.css('position');
-				
+
 				var startOffset = this._startOffset = {
 					x: box.offsetLeft(),
 					y: box.offsetTop()
 				};
-				
+
 				if (container) {
 					this._containerBox = new Box(container);
 					this._bounds = this._containerBox.boundsFor(box);
@@ -1065,7 +1065,7 @@
 					y: e.pageY
 				};
 
-				
+
 
 				this._preDragStyle = el.attr('style');
 
@@ -1098,13 +1098,13 @@
 					this._innerHeight = window.innerHeight;
 				}
 
-				var cancelFunc = function () { return false },
+				var cancelFunc = function () { return false; },
 					doc = document.documentElement;
 
 				if (this.dropTargets) {
 					var event = new events.Event();
 					event.draggable = this;
-					for (var i = 0, l = this.dropTargets.length; i < l; i++) {
+					for (i = 0, l = this.dropTargets.length; i < l; i++) {
 						fire(this.dropTargets[i], 'active', event);
 					}
 
@@ -1149,8 +1149,8 @@
 						(this._startOffset.y + e.pageY - this._mouseStart.y),
 					bounds = this._bounds,
 					step = this._opts.step;
-				
-				
+
+
 				//round position to the nearest step
 				if (step.x != 1) {
 					newX = Math.round((newX - this._startOffset.x) / step.x) * step.x + this._startOffset.x;
@@ -1158,7 +1158,7 @@
 				if (step.y != 1) {
 					newY = Math.round((newY - this._startOffset.y) / step.y) * step.y + this._startOffset.y;
 				}
-				
+
 				// only pay for the function call if we have a container or an axis
 				if (bounds) {
 					// only apply bounds on the axis we're using
@@ -1169,7 +1169,7 @@
 						newY = newY < bounds[0] ? bounds[0] : newY > bounds[2] ? bounds[2] : newY;
 					}
 				}
-				
+
 				// set the new position
 				element[0].style.left = newX + 'px';
 				element[0].style.top = newY + 'px';
@@ -1278,7 +1278,7 @@
 					var totalHeight = activeTarget._box.innerTopPos();
 					var draggablePosition = mousePos.y - box.offsetParentPageTop();
 					var placed = 0;
-					for (var i = 0, l = childBoxes.length; i < l; i++) {
+					for (i = 0, l = childBoxes.length; i < l; i++) {
 						if (children[i] == this.element[0]) continue;
 						childBox = childBoxes[i];
 						totalHeight += childBox.outerHeight();
@@ -1305,7 +1305,7 @@
 
 				this._lock++;
 				var this_ = this;
-				setTimeout(function () { this_._testForDropTargets(1) }, 100);
+				setTimeout(function () { this.testForDropTargets(1); }, 100);
 			},
 
 			/*
@@ -1386,12 +1386,12 @@
 				this._dragging = 0;
 
 				//remove any helpers/placeholders
-				
+
 				if (this._reset) {
 					this._reset();
 					delete this._reset;
 				}
-				
+
 				if (this.placeholder) {
 					this.placeholder.remove();
 				}
@@ -1424,7 +1424,7 @@
 						0.5
 					),
 					duration = 0.3 + (distance / 1000);
-				
+
 				var channels = [[
 					glow.anim.css(el, duration, {
 						left: this._startOffset.x,
@@ -1499,7 +1499,7 @@
 		@param {Function} [opts.onActive] An event listener to fire when an associated Draggable starts being dragged.
 
 		@param {Function} [opts.onInactive] An event listener to fire when an associated Draggable stops being dragged.
-		
+
 		@example
 			var myDropTarget = new glow.dragdrop.DropTarget('#dropTarget', {
 				onActive: function(e){
@@ -1716,7 +1716,7 @@
 				//dropIndicator.after(draggable.element);
 				var marginLeft = parseInt(dropIndicator.css('margin-left')) || 0,
 					marginTop  = parseInt(dropIndicator.css('margin-top')) || 0;
-					
+
 				draggable._startOffset = {
 					x: box.offsetLeft() - marginLeft,
 					y: box.offsetTop() - marginTop
@@ -1725,7 +1725,7 @@
 				delete this._dropIndicator;
 			}
 
-		}
+		};
 		glow.dragdrop = r;
 
 

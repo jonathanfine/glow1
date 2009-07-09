@@ -11,13 +11,13 @@
 		'glow.net',
 		'glow.widgets.Overlay'
 	]],
-	
+
 	builder: function(glow) {
 /* private fields *************************************************************/
 		var $      = glow.dom.get, // shortcuts
 			events = glow.events,
 			anim   = glow.anim;
-			
+
 /* private functions **********************************************************/
 		/**
 			@private
@@ -28,10 +28,10 @@
 			if (!that.inputElement[0].tagName.toLowerCase() == 'input') {
 				throw 'Argument "inputElement" must be set to an input HTMLElement.';
 			}
-			
+
 			that.inputElement.attr('autocomplete', 'off'); // stop arrow keys from doing browsery things
 		}
-		
+
 		/**
 			@private
 			@description Uses AJAX to refresh the data from a server URL.
@@ -43,23 +43,23 @@
 			}
 			else {
 				that._lastDownload = url;
-				
+
 				if (that._pendingRequest) that._pendingRequest.abort();
 				that._pendingRequest = glow.net.get(
 					url,
 					{
 						onLoad: function(r) {
 							var dataObject = (that.opts.parseData)? that.opts.parseData.apply(that, [r]) : eval(r.text());
-							
+
 							that._pendingRequest = null;
 							that.setData(dataObject);
-							
+
 							// create and populate Event instance
 							var e = new events.Event();
 							e.data = dataObject;
 							e.text = r.text();
 							events.fire(that, 'dataLoad', e);
-					
+
 							if (callback) callback.apply(that, arguments);
 							else that.find();
 						},
@@ -77,7 +77,7 @@
 				);
 			}
 		}
-		
+
 		/**
 			@private
 			@description Check whether the overlay is currently visible.
@@ -86,7 +86,7 @@
 		function isVisible(that) {
 			return ($(that.overlay.container).css('display') == 'block');
 		}
-		
+
 		/**
 			@private
 			@description Position the overlay under the input element.
@@ -99,7 +99,7 @@
 			.css('top', parseInt(inputOffset.top + that.inputElement[0].offsetHeight-1) + 'px')
 			.css('width', ((that.opts.width)? that.opts.width : that.inputElement[0].offsetWidth + 'px'));
 		}
-		
+
 		/**
 			@private
 		 */
@@ -111,8 +111,8 @@
 				else if (typeof that.opts.index == 'string') { // it's a field name
 					that._indexer = (function(index) {
 						return function(dataItem) {
-							return dataItem[index]
-						}
+							return dataItem[index];
+						};
 					})(that.opts.index);
 				}
 				else if (typeof that.opts.index.push != 'undefined') { // it's an array of field names
@@ -124,7 +124,7 @@
 								result[i] = dataItem[index[i]];
 							}
 							return result;
-						}
+						};
 					})(that.opts.index);
 				}
 				else throw 'opts.index must be of type function, string or array, not ' + typeof that.opts.index + '.';
@@ -132,31 +132,31 @@
 			else { // default
 				that._indexer = function (dataItem) { // the default indexer
 					return (dataItem['name'])? dataItem['name'] : dataItem.toString(); // TODO: what if there is no 'name' field?
-				}
+				};
 			}
 		}
-		
+
 		/**
 			@private
 			@description Make the next item in the results active.
 		 */
 		function nextItem(that) {
 			var currItem = $(that.overlay.container).get('.active');
-			
+
 			if (currItem.length == 0) {
 				var items = $(that.overlay.container).get('li'); // TODO
 				if (items.length) activateItem(that, items[0]);
 			}
 			else {
 				var nextItem = currItem.next();
-			
+
 				if (nextItem && !nextItem.is('ul')) {
 					deactivateItem(that, currItem);
 					activateItem(that, nextItem);
 				}
 			}
 		}
-		
+
 		/**
 			@private
 			@description Make the previous item in the results active.
@@ -170,14 +170,14 @@
 			}
 			else {
 				var prevItem = currItem.prev();
-				
+
 				if (prevItem && !prevItem.is('ul')) {
 					deactivateItem(that, currItem);
 					activateItem(that, prevItem);
 				}
 			}
 		}
-		
+
 		/**
 			@private
 			@description Given an HTML element, return this AutoSuggest list.
@@ -190,7 +190,7 @@
 			}
 			return (listItem.nodeName.toLowerCase() == 'li')? listItem : null;
 		}
-		
+
 		/**
 			@private
 			@description Make the given list item from the results active.
@@ -198,13 +198,13 @@
 		function activateItem(that, listItem) {
 			deactivateItems(that, listItem);
 			$(listItem).addClass('active');
-			
+
 			if (that._lastActive != listItem) {
-				that._lastActive = listItem;	
+				that._lastActive = listItem;
 				events.fire(that, 'itemActive');
 			}
 		}
-		
+
 		/**
 			@private
 			@description Make the item from the results at the given offeset active.
@@ -213,7 +213,7 @@
 			var li = that.overlay.container.get('li')[offset]; // TODO
 			if (li) $(li).addClass('active');
 		}
-		
+
 		/**
 			@private
 			@description Make the given list item not active.
@@ -221,7 +221,7 @@
 		function deactivateItem(that, listItem) {
 			$(listItem).removeClass('active');
 		}
-		
+
 		/**
 			@private
 			@description Make all list items not active.
@@ -234,75 +234,75 @@
 				}
 			);
 		}
-		
+
 		/**
 			@private
 			@description Used internally to add all necessary events.
 		 */
 		function addEvents(that) { /*debug*///console.log('addEvents()');
-			
+
 			events.addListener( // a result item has become active
 				that,
 				'itemActive',
 				function(e) { // fire any onItemActive handlers in the opts
-					if (!isVisible(that)) return false;						
+					if (!isVisible(that)) return false;
 					var selectedOffset = that.getSelectedOffset();
 					if (selectedOffset == -1) return false;
-					
+
 					if (that.opts.onItemActive) {
-						var e = new events.Event();
+						e = new events.Event();
 						e.activeItem = that._found[selectedOffset];
 						that.opts.onItemActive.apply(that, [e]);
 					}
-					
+
 					return true;
 				}
 			);
-			
+
 			events.addListener( // the mouse was clicked inside the input element
 				that.inputElement,
 				'mousedown',
 				function(e) { // bail, but keep any hilighted suggestion
 					clearTimeout(that.findTimeout);
-					
+
 					// user accepts the hilited text
 					that._value = that.inputElement.val();
 					valueChanged(that, true);
-					
+
 					that.hide();
-					
+
 					that.value += that._selected;
 					that._selected = '';
-					
+
 					return true;
 				}
 			);
-			
+
 			events.addListener( // a result item was selected
 				that,
 				'itemSelect',
 				function(e) { // fire any onItemSelect handlers in the opts
 					if (!isVisible(that)) return false;
-						
+
 					var selectedOffset = that.getSelectedOffset();
 					if (selectedOffset == -1) return false;
-					
-					var e = new events.Event();
+
+					e = new events.Event();
 					e.source = $(that.overlay.container).get('.active');
 					e.selectedItem = that._found[selectedOffset];
 					if (that.opts.onItemSelect) {
 						that.opts.onItemSelect.apply(that, [e]);
-						
+
 					}
 					setCaretTo(that.inputElement[0], that.inputElement.val().length);
 
 					valueChanged(that, /*without finding?*/true);
-					
+
 					that.hide();
 					return true;
 				}
 			);
-			
+
 			events.addListener( // the list of results was clicked (and thus a result item was selected)
 				that.overlay.container.get('ul')[0],
 				'mousedown',
@@ -319,7 +319,7 @@
 					place(that);
 				}
 			);
-			
+
 			// some code wot jake done wrote:
 			// prevent moz from hiding the input box when a link in the results is clicked
 			events.addListener(that.overlay.container, 'mousedown', function() {
@@ -332,21 +332,21 @@
 				}
 				return true;
 			});
-			
+
 			events.addListener( // the focus has moved away from the input element
 				that.inputElement,
 				'blur',
 				function(e) { /*debug*///console.log("blur("+e+")");
 					clearTimeout(that.findTimeout);
-					
+
 					// user accepts the hilited text
 					that._value = that.inputElement.val();
 					valueChanged(that, true);
-						
+
 					that.hide();
 				}
 			);
-			
+
 			events.addListener( // the cursor is over a result item
 				that.overlay.container,
 				'mouseover',
@@ -355,7 +355,7 @@
 					li && activateItem(that, li);
 				}
 			);
-			
+
 			events.addListener( // the cursor has left a result item
 				that.overlay.container,
 				'mouseout',
@@ -364,23 +364,23 @@
 					if (li && li != e.source) deactivateItem(that, li);
 				}
 			);
-			
+
 			var ignoreInUp = false; // flag to tell the keyup handler if it should ignore already-handled key presses
 			var repeating = {ondown:0, onpress:0};
-			
+
 			function keyDownHandler(e) { /*debug*///console.log("keydown "+e.key);
 				clearTimeout(that.findTimeout); // kill any pending finds whenever a new key is pressed
-				
+
 				ignoreInUp = false;
 				repeating.ondown++;
-				
+
 				if (e.key == 'DOWN') {
 					if (isVisible(that)) {
-						ignoreInUp = true; 
+						ignoreInUp = true;
 						nextItem(that);
 						return false; // on some systems this moves the carat around
 					}
-					
+
 				}
 				else if (e.key == 'UP') {
 					if (isVisible(that)) {
@@ -418,29 +418,29 @@
 				else if (e.key == 'ENTER') { // a result item was picked?
 					if (isVisible(that)) ignoreInUp = true;
 					else return true; // no: the results aren't visible so just do the default thing
-					
+
 					var selectedOffset = that.getSelectedOffset();
 					if (selectedOffset == -1) { // no: there isn't any result item selected
 						that.hide();
 						return true; // do the default thing
 					}
-					
+
 					// yes: fire the itemSelect event
-					var e = new events.Event();
+					e = new events.Event();
 					e.source = $(that.overlay.container).get('.active');
 					e.selectedItem = that._found[selectedOffset];
 					events.fire(that, 'itemSelect', e);
 					return false; // return false to prevent form submitting?
 				}
-				
+
 				// if we're still here...
 				return true;
 			}
 			events.addListener(that.inputElement[0], 'keydown', keyDownHandler);
-			
+
 			function keyPressHandler(e) { /*debug*///console.log("keypress "+e.key);
 				repeating.onpress++;
-				
+
 				// For non-printable characters, like arrow keys...
 				// Some browsers (like Mac Safari 3.1.1) only ever fire the keydown event
 				// (even for auto-repeats) and never fire the keypress event.
@@ -448,10 +448,10 @@
 				// keypress event repeatedly until the key is released.
 				// We need to deal with both possibilities but we must not
 				// handle the event twice.
-				
+
 				// We do nothing the very first time we get here, because the event must
 				// have already been handled in previous keydown phase.
-				// But if we've passed here more than once, oafter a single keydown, 
+				// But if we've passed here more than once, oafter a single keydown,
 				// we must be repeating on keypress, so it's ok to handle it from now on.
 				if (repeating.ondown == 1 && repeating.onpress > 1) {
 					if (e.key == 'DOWN') {
@@ -465,28 +465,28 @@
 							prevItem(that);
 						}
 						return false;
-					}	
+					}
 				}
-				
+
 				return true;
 			}
 			events.addListener(that.inputElement[0], 'keypress', keyPressHandler);
-			
-			
+
+
 			function keyUpHandler(e) { /*debug*///console.log("keyUpHandler(e)");
 				repeating = {ondown:0, onpress:0}; // not repeating anymore
-				
+
 				if (ignoreInUp) return false;
 
 				that._value = that.inputElement.val(); // stow the new value from the input element
-				
-				valueChanged(that);				
-				
+
+				valueChanged(that);
+
 				return true;
 			}
 			events.addListener(that.inputElement[0], 'keyup', keyUpHandler);
 		}
-		
+
 		/**
 			@private
 			@description What to do when the value in the input element changes.
@@ -499,11 +499,11 @@
 
 			var skipFind = false;
 			if (currentValue.toLowerCase() == that._oldValue.toLowerCase()) {
-				var skipFind = true;
+				skipFind = true;
 			}
-		
+
 			that._oldValue = currentValue;
-				
+
 			if (withoutFinding || skipFind) return;
 
 			that.findTimeout = setTimeout(
@@ -511,7 +511,7 @@
 					var e = new glow.events.Event();
 					e.value = currentValue;
 					glow.events.fire(that, 'inputChange', e);
-					
+
 					activateItemOffset(that, 0);
 
 					if (!e.defaultPrevented()) { // user can cancel the find in their handler
@@ -522,21 +522,21 @@
 				500
 			);
 		}
-			
+
 /* constructor ****************************************************************/
 
 		/**
 		  @name glow.widgets.AutoSuggest
 		  @constructor
 		  @description Create an auto-suggest menu for an input element.
-		  
+
 		  An AutoSuggest widget adds the ability for a text input element to make
 		  suggestions whilst the user types. This appears as a list of selectable
 		  items below the input element which dynamically updates based on what
 		  has been typed so far.
 
 		  <div class="info">Widgets must be called in a <code>glow.ready()</code> call.</div>
-		  
+
 		  @param {glow.dom.NodeList | String} inputElement A NodeList or css selector that points to a text input element.
 		  @param {Object[] | String[] | String | Function} dataSource Either an array of objects, an array of strings (referred to as a 'dataSource'), a function that returns a dataSource or a URL that when requested will return a dataSource.
 		  @param {Object} opts Optional configuration settings.
@@ -546,9 +546,9 @@
 			@param {Function} [opts.parseData] Transform the response from the server into a dataSource object.
 				The server may return XML or even plain text, but your parseData function should convert this
 				data into an array of objects.
-				
+
 				Your function will be passed a {@link glow.net.Response} object from the server.
-				
+
 			@param {Function} [opts.formatItem] Given the matched data item, return HTML or NodeList.
 			@param {Boolean} [opts.activeOnShow=true] Should the first suggestion automatically be active when the suggestion list appears?
 			@param {Number} [opts.maxListLength] Limit the size of the result list to this.
@@ -556,7 +556,7 @@
 			@param {Function} [opts.isMatch] Provide a custom function to filter the dataset for results
 				Your function will be passed an indexed term and the term entered by the user, return
 				true to confirm a match.
-				
+
 				The default function will check the indexed term begins with the term entered by the user.
 			@param {Boolean} [opts.complete=false] Append the completed text of the currently active suggestion to the input text.
 			@param {String} [opts.delim] When defined, the input text will be treated as multiple values, separated by this string (with surrounding spaces ignored).
@@ -567,7 +567,7 @@
 			@param {Function} [opts.onDataLoad] Your own handler for the dataLoad event.
 			@param {Function} [opts.onDataError] Your own handler for the dataError event.
 			@param {Function} [opts.onDataAbort] Your own handler for the dataAbort event.
-	  
+
 		  @see <a href="../furtherinfo/widgets/autosuggest/">AutoSuggest user guide</a>
 
 		  @example
@@ -652,9 +652,9 @@
 		*/
 		glow.widgets.AutoSuggest = function(inputElement, dataSource, opts) { /*debug*///console.log('new glow.widgets.AutoSuggest('+inputElement+', '+dataSource+', '+opts+')');
 			this.opts = opts || {};
-			
+
 			bindTo(this, inputElement);
-						
+
 			this.overlay = new glow.widgets.Overlay(
 				glow.dom.create('<div class="glowCSSVERSION-autoSuggest"><ul></ul></div>'),
 				{
@@ -662,16 +662,16 @@
 					anim: (this.opts.anim)? this.opts.anim : null
 				}
 			);
-		
+
 			this.configure(this.opts);
 			buildIndexer(this); // build the function that will be used to create an index from the data
-			
+
 			this.dataSource = dataSource;
 			this.data = [];
 			if (typeof dataSource != 'string') this.loadData(); // urls are not loaded on construct, objects and functions are
-			
+
 			addEvents(this);
-			
+
 			if (this.opts.complete) {
 
 				// Fix for trac 175 - "Autosuggest opens overlay onLoad where opts.complete == true"
@@ -681,7 +681,7 @@
 				else {
 					this.setData(dataSource, function() {});
 				}
-				
+
 				var that = this;
 
 				events.addListener(
@@ -693,12 +693,12 @@
 						var matchedOn = (that._found[selectedOffset][this.opts.index]||that._found[selectedOffset]['name']||that._found[selectedOffset]);
 						if (typeof matchedOn.push != "undefined") matchedOn = that._matchedOn;
 						that.suggest(matchedOn);
-						
+
 						return true;
 					}
 				);
 			}
-		}
+		};
 
 /* public fields *************************************************************/
 
@@ -715,7 +715,7 @@
 		  alert(myAutoSuggest.inputElement); // returns a nodeList referencing input#preferedColour
 
 		 */
-		 
+
 		 /**
 		  @name glow.widgets.AutoSuggest#overlay
 		  @type glow.widgets.Overlay
@@ -729,23 +729,23 @@
 		  myAutoSuggest.overlay.show();
 
 		 */
-		
+
 /* public methods *************************************************************/
-		
+
 		/**
 			@private
 			@description Used internally to apply configuration options.
 		 */
 		glow.widgets.AutoSuggest.prototype.configure = function(opts) {
 			this.opts = opts || {};
-			
+
 			if (this.opts.height) {
 				var listContainer = $(this.overlay.container.get('.glowCSSVERSION-autoSuggest').get('ul')[0]);
 				listContainer.css('overflow-x', 'hidden');
 				listContainer.css('overflow-y', 'auto');
 				listContainer.height(this.opts.height);
 			}
-			
+
 			if (this.opts.theme == 'dark') {
 				$(this.overlay.container.get('ul')[0]).removeClass('autosuggest-light');
 				$(this.overlay.container.get('ul')[0]).addClass('autosuggest-dark');
@@ -754,24 +754,24 @@
 				$(this.overlay.container.get('ul')[0]).removeClass('autosuggest-dark');
 				$(this.overlay.container.get('ul')[0]).addClass('autosuggest-light');
 			}
-			
+
 			if (this.opts.onDataLoad)    events.addListener(this, 'dataLoad', this.opts.onDataLoad);
 			if (this.opts.onDataError)   events.addListener(this, 'dataError', this.opts.onDataError);
 			if (this.opts.onDataAbort)   events.addListener(this, 'dataAbort', this.opts.onDataAbort);
 			if (this.opts.onInputChange) events.addListener(this, 'inputChange', this.opts.onInputChange);
-							
-			this._isMatch =  this.opts.isMatch || function(word, lookFor) { return (word.indexOf(lookFor) == 0); } // default
+
+			this._isMatch =  this.opts.isMatch || function(word, lookFor) { return (word.indexOf(lookFor) == 0); }; // default
 			this._formatItem = this.opts.formatItem || function(o) { return (o.name)? o.name : o.toString(); }; // default
 			this._matchItem = this.opts.formatItem || function(o) { return o.name; }; // default
-		}
-		
+		};
+
 		/**
 			@name glow.widgets.AutoSuggest#setData
 			@function
 			@description Update the data source
-			
+
 				If the dataSource is a URL it will be reloaded asynchronously.
-				
+
 			@param {Object[] | String | Function} dataSource New data source
 			@type {glow.widgets.AutoSuggest}
 			@returns The instance of the widget.
@@ -788,43 +788,44 @@
 			if (typeof dataSource == 'function') {
 				dataSource = dataSource.call(this);
 			}
-			
+
 			if (typeof dataSource == 'string') { // it's a URL but next time through we'll have an actual object, not a string
 				this.dataURL = dataSource;
 				this.data = []; // placeholder value until download completes
-				
+
 				// insert the current value of the input element to pass to the server
 				dataSource = dataSource.replace(/\{input\}/g, escape(this.getValue()));
 				downloadData(this, dataSource, callback); // calls setData
 			}
 			else {
 				this.data = dataSource;
-			
+
 				// process data to build a results_array and an index like {"keyword": results_array_offsets[]}
 				this.index   = {};
 				this.results = [];
-				
+
 				// this._indexer is a function to extract the keywords from each data item
 				for (var d = 0; d < this.data.length; d++) {
 					var datum = this.data[d];
 					this.results.push(datum);
-				
+
 					// build index keywords
 					var keywords = this._indexer(datum);
 					keywords = (typeof keywords == 'string')? [keywords] : keywords;
-					
+
 					// associate data items with keyword
-					for (var i = 0; i < keywords.length; i++) {					
+					for (var i = 0; i < keywords.length; i++) {
 						var keyword   = "="+(this.opts.caseSensitive? String(keywords[i]) : String(keywords[i]).toLowerCase());
 						if (!this.index[keyword]) this.index[keyword] = [];
 						this.index[keyword].push(this.results.length-1);
 					}
 				}
-				
+
 				return this; // chained
 			}
-		}
-		
+            return undefined;
+		};
+
 		/**
 			@name glow.widgets.AutoSuggest#loadData
 			@function
@@ -841,8 +842,8 @@
 		glow.widgets.AutoSuggest.prototype.loadData = function(callback) { /*debug*///console.log("loadData()");
 			this.setData(this.dataSource, callback);
 			return this; // chained
-		}
-		
+		};
+
 		/**
 			@private
 			@description Used to create a sting that combines a completetion with existing text.
@@ -855,13 +856,13 @@
 			else {
 				split = new RegExp('^(.*'+delim+' *)([^'+delim+']*)$');
 			}
-			
+
 			var lv = split.exec(currentValue)[1];
 			var rv = (split.exec(value)||["", "", value])[2];
 
 			return lv+rv;
 		}
-		
+
 		/**
 			@name glow.widgets.AutoSuggest#val
 			@function
@@ -889,8 +890,8 @@
 				this.inputElement.val(value);
 				return this; // chained
 			}
-		}
-		
+		};
+
 		/**
 			@private
 			@name glow.widgets.AutoSuggest#setValue
@@ -902,11 +903,11 @@
 			var currentValue = this._value || this.inputElement.val();
 			var delim = (this.opts.delim || '');
 			value = appendTag(currentValue, delim, value);
-			
+
 			this._value = value;
 			this.inputElement.val(value);
-		}
-		
+		};
+
 		/**
 			@private
 			@name glow.widgets.AutoSuggest#getValue
@@ -916,15 +917,15 @@
 		 */
 		glow.widgets.AutoSuggest.prototype.getValue = function() { /*debug*///console.log("getValue()");
 			var value = this._value || this.inputElement.val();
-			
+
 			if (typeof this.opts.delim != 'undefined' && this.opts.delim != '') {
 			 	value = (value.match(new RegExp('(^|'+this.opts.delim+' *)([^'+this.opts.delim+']*)$')) || ['', '', '']);
 			 	value = value[2];
 			 }
-			 
+
 			return value;
-		}
-		
+		};
+
 		/**
 			@private
 			@name glow.widgets.AutoSuggest#suggest
@@ -939,8 +940,8 @@
 			this.inputElement.val(value);
 
 			selectRange(this.inputElement[0], {start: (this._value || '').length, end: this.inputElement.val().length}); //currentValue.length+suggested.length})
-		}
-		
+		};
+
 		/**
 			@private
 			@description Make the text in the given range selected.
@@ -964,14 +965,14 @@
 				el.selectionEnd = range.end;
 			}
 		}
-		
+
 		/**
 			@private
 		 */
 		function setCaretTo(el, pos) { /*debug*///console.log("setCaretTo("+el+", "+pos+")");
-			selectRange(el, {start: pos, end: pos})
+			selectRange(el, {start: pos, end: pos});
 		}
-		
+
 		/**
 		  @private
 		  @name array_indexOf
@@ -981,14 +982,14 @@
 		 */
 		function array_indexOf(value) {
 			var index = -1;
-		
+
 			for (var i = 0, l = this.length; i < l; i++) {
 				if (this[i] === value) {
 					index = i;
 					break;
 				}
 			}
-		
+
 			return index;
 		}
 
@@ -1002,7 +1003,7 @@
 		 */
 		glow.widgets.AutoSuggest.prototype.find = function(lookFor) { /*debug*///console.log("find()")
 			if (typeof lookFor == "undefined") lookFor = this.getValue();
-			
+
 			// ltrim
 			while (lookFor.charAt(0) == ' ') lookFor = lookFor.substring(1);
 
@@ -1016,11 +1017,11 @@
 					var lookAt = k.substring(1);
 
 					if (this._isMatch(lookAt, lookFor)) {
-						var keys = this.index[k];						
-						
+						var keys = this.index[k];
+
 						for (var j = 0; j < keys.length; j++) {
 							var offset = keys[j];
-							
+
 							if (found.indexOf(this.results[offset]) == -1) {
 								found.push(this.results[offset]);
 							}
@@ -1028,34 +1029,34 @@
 					}
 				}
 			}
-			
+
 			this._found = found; // used to get the selected object in event handlers
 			if (found.length) {
 				if (this.opts.maxListLength) found.length = Math.min(found.length, this.opts.maxListLength);
-				
+
 				var list = [];
 				for (var i = 0; i < found.length; i++) {
-					list.push('<li class="'+((i%2)? 'odd' : 'even')+'">'+this._formatItem(found[i])+'</li>');	
+					list.push('<li class="'+((i%2)? 'odd' : 'even')+'">'+this._formatItem(found[i])+'</li>');
 				}
 				$(this.overlay.container.get('ul')[0]).html(list.join(''));
-				
+
 				this.show();
 			}
 			else {
 				this.hide();
 			}
-			
+
 			if (this.opts.activeOnShow !== false) nextItem(this);
-		}
-		
+		};
+
 		/**
 			@private
 			@description Make the overlay not visible.
 		 */
 		glow.widgets.AutoSuggest.prototype.hide = function() { /*debug*///console.log("hide()")
 			this.overlay.hide();
-		}
-		
+		};
+
 		/**
 			@private
 			@description Make the overlay visible.
@@ -1063,22 +1064,22 @@
 		glow.widgets.AutoSuggest.prototype.show = function() { /*debug*///console.log("show()")
 			place(this);
 			this.overlay.show();
-		}
-		
+		};
+
 		/**
 			@private
 			@description Get the offset of the currently selected item in the results.
 		 */
 		glow.widgets.AutoSuggest.prototype.getSelectedOffset = function() {
 			if (!isVisible(this)) return -1;
-			
+
 			var items = this.overlay.container.get('li'); // TODO: handle embedded list items
-			
+
 			for (var i = 0; i < items.length; i++) {
 				if ($(items[i]).hasClass('active')) return i;
 			}
-			
+
 			return -1;
-		}
+		};
 	}
 });

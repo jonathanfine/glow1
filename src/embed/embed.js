@@ -121,7 +121,8 @@
 
 			var $regexFLASH_VERSION = /^WIN (\d+),(\d+),(\d+),\d+$/;
 			var $version = flash_player.GetVariable("$version");
-			if ($match = $regexFLASH_VERSION.exec($version)){
+            var $match;
+			if (($match = $regexFLASH_VERSION.exec($version))){
 				return {
 					major 	: parseInt($match[1]),
 					minor 	: parseInt($match[2]),
@@ -133,7 +134,8 @@
 				// throw an exception, something very strange going on if flash player returns version in any other format ?
 
 			}
-		}
+            return undefined;
+		};
 
 		/**
 		@name _getFlashPlayerVersion
@@ -148,7 +150,7 @@
 		*/
 		function _getFlashPlayerVersion(){
 			var $match, flash_player, NO_FLASH = {major : 0, minor : 0, release : 0}, result = NO_FLASH;
-			
+
 			if (glow.env.ie){
 				try {
 					flash_player = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7");
@@ -186,7 +188,7 @@
 				}
 			}
 
-			result.toString = function(){return this.major ? [this.major,this.minor,this.release].join(".") : "No <a title='BBC Webwise article about downloading' href='http://www.bbc.co.uk/webwise/askbruce/articles/download/howdoidownloadflashplayer_1.shtml'>Flash</a> player installed, or version is pre 6.0.0.  Visit <a href='http://www.bbc.co.uk/webwise/'>BBC Webwise</a> for full instructions"};
+			result.toString = function(){return this.major ? [this.major,this.minor,this.release].join(".") : "No <a title='BBC Webwise article about downloading' href='http://www.bbc.co.uk/webwise/askbruce/articles/download/howdoidownloadflashplayer_1.shtml'>Flash</a> player installed, or version is pre 6.0.0.  Visit <a href='http://www.bbc.co.uk/webwise/'>BBC Webwise</a> for full instructions";};
 
 			return result;
 
@@ -227,7 +229,7 @@
 					major   : parseInt(match[1],10),
 					minor   : parseInt(match[2]||0,10),
 					release : parseInt(match[3]||0,10)
-				}
+				};
 			}
 
 			var v = installed_flash_player, rv = requiredVersion;
@@ -379,14 +381,14 @@
 			 */
 			this.movie = null;
 
-			this._displayErrorMessage = typeof opts.message == "function" ? opts.message : function(){return opts.message};
+			this._displayErrorMessage = typeof opts.message == "function" ? opts.message : function(){return opts.message;};
 
-			this.isSupported;
+			// this.isSupported; // Code has no side effects.
 
 			// Check that the min version requirement is satisfied and store this status, so we don't later try to embed the thing
 			// if we don't can't meet the version requirements.
 
-			if (this.isSupported = _meetsVersionRequirements(minVersion)){
+			if ((this.isSupported = _meetsVersionRequirements(minVersion))){
 				var attrs = opts.attributes,
 					overwrites = ["id", "width", "height"],
 					i = overwrites.length;

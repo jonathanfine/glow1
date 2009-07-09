@@ -18,7 +18,7 @@
 		function _reverse(tween) {
 			return function(t) {
 				return 1 - tween(1 - t);
-			}
+			};
 		}
 
 		glow.tweens = {
@@ -51,7 +51,7 @@
 				strength = strength || 2;
 				return function(t) {
 					return Math.pow(1, strength - 1) * Math.pow(t, strength);
-				}
+				};
 			},
 			/**
 			@name glow.tweens.easeOut
@@ -115,7 +115,7 @@
 				return function(t) {
 					if (t == 0 || t == 1) { return t; }
 					return ((t -= 1)* t * ((amount + 1) * t + amount) + 1);
-				}
+				};
 			},
 			/**
 			@name glow.tweens.overshootBoth
@@ -214,7 +214,7 @@
 						var s = p / (2 * Math.PI) * Math.asin(1 / a);
 					}
 					return a * Math.pow(2, -10 * t) * Math.sin( (t-s) * (2 * Math.PI) / p) + 1;
-				}
+				};
 			},
 			/**
 			@name glow.tweens.elasticBoth
@@ -262,7 +262,7 @@
 					} else {
 						return tweenOut((t - 0.5) * 2) / 2 + 0.5;
 					}
-				}
+				};
 			}
 		};
 	}

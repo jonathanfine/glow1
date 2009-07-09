@@ -116,7 +116,7 @@
 					// make sure all the values are dates
 					return glow.lang.map(rule, function(item) {
 						return new Date(item);
-					})
+					});
 				}
 				return rule;
 			}
@@ -294,7 +294,7 @@
 		@description Fires each time the Timetable view start point changes.
 
 			This will fire after dragging, rather than during dragging.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -303,7 +303,7 @@
 		@description Fires when the user clicks an item on the Timetable.
 
 			The Event object will have an 'item' property.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -318,7 +318,7 @@
 		@description Fires when the Timetable stops moving (by whatever UI method).
 		@param {glow.events.Event} event Event Object
 		*/
-		
+
 		function Timetable(container, start, end, viewStart, viewEnd, opts) {
 
 			this._opts = opts = $apply({
@@ -433,7 +433,7 @@
 			@type glow.dom.NodeList
 			@description The root element of the Timetable widget
 			*/
-			this.element;
+			// this.element;  // Code has no side effects!
 
 			// create view
 			this._view = new View(this);
@@ -1347,7 +1347,7 @@
 			@type glow.dom.Nodelist
 			@description The HTML element that represents the item in the Timetable.
 			*/
-			this.element;
+			// this.element;  // Code has no side effects!
 		}
 
 		Item.prototype = {
@@ -1497,6 +1497,7 @@
 					}
 					itemElm = itemElm.parent();
 				}
+                return undefined;
 			}
 
 			// called before the timetable begins to move
@@ -1895,7 +1896,7 @@
 					itemContext = {
 						start: points[i],
 						end: points[i+1]
-					}
+					};
 
 					// create our item
 					$create(scaleItemTemplate)
@@ -1939,7 +1940,7 @@
 				var timetable = this._timetable,
 					primary = timetable._primaryScrollbar,
 					secondary = timetable._secondaryScrollbar;
-				
+
 				// we need to show / hide the scrollbar elm because IE threw its toys out of the pram
 				if (primary) {
 					this._scrollbar1Elm.css("display", "block");
@@ -2039,12 +2040,12 @@
 				}
 
 				for(j = 0; j < numTracks; j++) {
-					
-					newView = tracks[j].itemsInRange(viewStart, viewEnd)
-					
+
+					newView = tracks[j].itemsInRange(viewStart, viewEnd);
+
 					for(i = 0, l = newView.length; i < l; i++) {
 						id = newView[i].id;
-						
+
 						if(!inCurrentView[id]) {
 							inCurrentView[id] = newView[i];
 							$("#" + id).css("display", "block");
@@ -2066,7 +2067,7 @@
 			function _createHiddenNavSelect() {
 				var timetable = this._timetable,
 					spec = timetable._primaryScales[0] || timetable._secondaryScales[0] || timetable._primaryScrollbar || timetable._secondaryScrollbar;
-					
+
 				if(spec) {
 					var points = spec.points,
 						entries = [],
@@ -2077,12 +2078,12 @@
 						lastViewStart = timetable.end - timetable._viewWindowSize,
 						startOption = '<option value="' + timetable.start.valueOf() + '">' + locale.ACCESSIBILITY_MENU_START + '</option>',
 						endOption = '<option value="' + lastViewStart.valueOf() + '">' + locale.ACCESSIBILITY_MENU_END + '</option>';
-						
+
 					for(; i < len; i++) {
 						itemContext = {
 							start: points[i],
 							end: points[i + 1]
-						}
+						};
 						if ((itemContext.start >= timetable.start) && (itemContext.start <= lastViewStart)) {
 							entries[i] = '<option value="' + points[i].valueOf() + '">' + _buildFromTemplate.call(itemContext, spec.template).text() + '</option>';
 							if (itemContext.start.valueOf() == timetable.start.valueOf()) {
@@ -2094,7 +2095,7 @@
 						}
 					}
 					var select = this._accessibiltySelect = $dom.create('<select>' + startOption + entries.join('') + endOption + '</select>');
-					
+
 					$listen(select, "change", function() {
 						that._timetable.currentPosition(select.val() * 1);
 						_hideOutOfView.call(that);
@@ -2107,7 +2108,7 @@
 
 
 			function _updateHiddenNavSelect() {
-				
+
 				if(this._accessibiltySelect) {
 					var currentPos = this.currentPosition(),
 						selectOptions = this._accessibiltySelect[0].options,
@@ -2115,7 +2116,7 @@
 						len = selectOptions.length,
 						val = selectOptions[i].value * 1,
 						tmp;
-						
+
 					for (; i < len; i++) {
 						tmp = selectOptions[i].value * 1;
 						if(tmp <= (currentPos + this.scale)) val = tmp; // add scale to allow for rounding errors
@@ -2349,7 +2350,7 @@
 
 				// called when a dragging action start
 				function _scrollbarMoveStart() {
-					_clearItemHiding.call(this._timetable._view)
+					_clearItemHiding.call(this._timetable._view);
 					// we use this to tell if a change is a dragging change or set programmatically
 					this._isDraggingChange = true;
 					_moveStart.call(this._timetable._view);
@@ -2454,7 +2455,7 @@
 						itemContext = {
 							start: points[i],
 							end: points[i+1]
-						}
+						};
 
 
 						// create our item

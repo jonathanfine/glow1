@@ -236,8 +236,8 @@
 						'), 0, 255) + ")"';
 				} else if (cssProp == "background-position") {
 					var vals = {},
-						fromTo = ["from", "to"],
-						unit = (getUnit.exec(from) || unitDefault)[1];
+				        fromTo = ["from", "to"];
+					unit = (getUnit.exec(from) || unitDefault)[1];
 					vals.fromOrig = from.toString().split(/\s/);
 					vals.toOrig = to.toString().split(/\s/);
 
@@ -329,7 +329,7 @@
 			}
 			return anim;
 		};
-		
+
 		/**
 		@name glow.anim-slideElement
 		@private
@@ -337,7 +337,7 @@
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
 		@param {Number} duration Animation duration in seconds.
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
 		@description Builds a function for an animation.
 		*/
@@ -345,20 +345,20 @@
 			duration = duration || 0.5;
 			// normalise 'element' to NodeList
 			element = $(element);
-			
+
 			opts = glow.lang.apply({
 				tween: glow.tweens.easeBoth(),
 				onStart: function(){},
 				onComplete: function(){}
 			}, opts);
-			
+
 			var i = 0,
 				thatlength = element.length,
 				completeHeight,
 				fromHeight,
 				channels = [],
 				timeline;
-			
+
 			for(; i < thatlength; i++) {
 				if (action == "up" || (action == "toggle" && element.slice(i, i+1).height() > 0)) {
 					element[i].style.overflow = 'hidden';
@@ -382,21 +382,21 @@
 				];
 
 			}
-			
+
 			timeline = new glow.anim.Timeline(channels);
-			
+
 			events.addListener(timeline, "complete", function() {
 				// return heights to "auto" for slide down
 				element.each(function() {
 					if (this.style.height != "0px") {
 						this.style.height = "auto";
 					}
-				})
+				});
 			});
-			
+
 			events.addListener(timeline, "start", opts.onStart);
 			events.addListener(timeline, "complete", opts.onComplete);
-			
+
 			// return & start our new timeline
 			return timeline.start();
 		};
@@ -404,29 +404,29 @@
 		/**
 		@name glow.anim.slideDown
 		@function
-		@description Slide a NodeList down from a height of 0 
-		
+		@description Slide a NodeList down from a height of 0
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
+
 		@param {Number} duration Animation duration in seconds.
-		
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		
+
 			glow.anim.slideDown("#menu", 1);
-		 		 
-		**/	
+
+		**/
 		r.slideDown = function(element, duration, opts) {
 			return slideElement(element, duration, 'down', opts);
 		};
@@ -434,59 +434,59 @@
 		/**
 		@name glow.anim.slideUp
 		@function
-		@description Slide a NodeList up to a height of 0 
-		
+		@description Slide a NodeList up to a height of 0
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
+
 		@param {Number} duration Animation duration in seconds.
-		
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.slideUp("#menu", 1);
-		 		 
-		**/		
+
+		**/
 		r.slideUp = function(element, duration, opts) {
 			return slideElement(element, duration, 'up', opts);
 		};
-		
+
 		/**
 		@name glow.anim.slideToggle
 		@function
-		@description Toggle a NodeList Up or Down depending on it's present state. 
-		
+		@description Toggle a NodeList Up or Down depending on it's present state.
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
+
 		@param {Number} duration Animation duration in seconds.
-		
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.slideToggle("#menu", 1);
-		 		 
-		**/			
+
+		**/
 		r.slideToggle = function(element, duration, opts) {
 			return slideElement(element, duration, 'toggle', opts);
 		};
@@ -495,107 +495,107 @@
 		/**
 		@name glow.anim.fadeOut
 		@function
-		@description Fade out a set of elements 
-		
+		@description Fade out a set of elements
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
+
 		@param {Number} duration Animation duration in seconds.
-		
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.fadeOut("#menu", 1);
-		 		 
+
 		**/
 		r.fadeOut = function(element, duration, opts) {
-			return r.fadeTo(element, 0, duration, opts)
+			return r.fadeTo(element, 0, duration, opts);
         };
-		
+
 		/**
 		@name glow.anim.fadeIn
 		@function
-		@description Fade in a set of elements 
-		 
+		@description Fade in a set of elements
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
+
 		@param {Number} duration Animation duration in seconds.
-		  
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.fadeIn("#menu", 1);
-		 		 
+
 		**/
 		r.fadeIn = function(element, duration, opts){
 			r.fadeTo(element, 1, duration, opts);
         };
-		
+
 		/**
 		@name glow.anim.fadeTo
 		@function
 		@description Fade a set of elements to a given opacity
-		 
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		 
-		@param {Number} opacity fade to opacity level between 0 & 1. 
-		 
+
+		@param {Number} opacity fade to opacity level between 0 & 1.
+
 		@param {Number} duration Animation duration in seconds.
-		  
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.fadeTo("#menu", 0.5, 1);
-		 		 
+
 		**/
 		r.fadeTo = function(element, opacity, duration, opts){
 			duration = duration || 0.5;
 			// normalise 'element' to NodeList
 			element = $(element);
-			
+
 			opts = glow.lang.apply({
 				tween: glow.tweens.easeBoth(),
 				onStart: function(){},
 				onComplete: function(){}
 			}, opts);
-			
+
 			var i = 0,
 				thatlength = element.length,
 				channels = [],
 				timeline;
-			
+
 			for(; i < thatlength; i++) {
 				channels[i] = [
 					glow.anim.css(element[i], duration, {
@@ -603,75 +603,75 @@
 					}, { tween: opts.tween })
 				];
 			}
-			
+
 			timeline = new glow.anim.Timeline(channels);
-			
+
 			events.addListener(timeline, "start", opts.onStart);
 			events.addListener(timeline, "complete", opts.onComplete);
-			
+
 			// return & start our new timeline
 			return timeline.start();
         };
-        
+
 
 		/**
 		@name glow.anim.highlight
 		@function
 		@description	Highlight an element by fading the background colour
-		 
+
 		@param {String | glow.dom.NodeList} element Element to animate. CSS Selector can be used.
-		
-		@param {String} highlightColour highlight colour in hex, "rgb(r, g, b)" or css colour name. 
-		 
+
+		@param {String} highlightColour highlight colour in hex, "rgb(r, g, b)" or css colour name.
+
 		@param {Number} duration Animation duration in seconds.
-		  
+
 		@param {Function} opts Object
-		 
+
 		@param {Function} [opts.completeColour] The background colour of the element once the highlight is complete.
-		
+
 		 				  If none supplied Glow assumes the element's existing background color (e.g. #336699),
 		 				  if the element has no background color specified (e.g. Transparent)
 		 				  the highlight will transition to white.
-		
+
 		@param {Function} [opts.tween=easeBoth tween] The way the value moves through time. See {@link glow.tweens}.
-		  
-		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.  
-		 
+
+		@param {Function} [opts.onStart] The function to be called when the first element in the NodeList starts the animation.
+
 		@param {Function} [opts.onComplete] The function to be called when the first element in the NodeList completes the animation.
-		
+
 		@returns {glow.anim.Timeline}
-		
+
 			A started timeline
-		
+
 		@example
-		  		
+
 			glow.anim.highlight("#textInput", "#ff0", 1);
 		**/
 		r.highlight = function(element, highlightColour, duration, opts){
 			// normalise element
 			element = $(element);
-			
+
 			duration = duration || 1;
 			highlightColour = highlightColour || '#ffff99';
-			
+
 			opts = glow.lang.apply({
 				tween: glow.tweens.easeBoth(),
 				onStart: function(){},
 				onComplete: function(){}
 			}, opts);
-			
-			var i = 0, 
+
+			var i = 0,
 				transArray = [],
 				elmsLength = element.length,
 				completeColour,
 				channels = [],
 				timeline;
-			
+
 			for(; i < elmsLength; i++) {
-				
+
 				completeColour = opts.completeColour || element.slice(i, i+1).css("background-color");
 
-				if (completeColour == "transparent" || completeColour == "") { 
+				if (completeColour == "transparent" || completeColour == "") {
 					completeColour = "#fff";
 				}
 				channels[i] = [
@@ -680,9 +680,9 @@
 					}, {tween: opts.tween})
 				];
 			}
-			
+
 			timeline = new glow.anim.Timeline(channels);
-			
+
 			events.addListener(timeline, "start", opts.onStart);
 			events.addListener(timeline, "complete", opts.onComplete);
 			return timeline.start();
@@ -711,7 +711,7 @@
 		@param {Function} [opts.tween=linear tween] The way the value moves through time.
 
 			See {@link glow.tweens}.
-			
+
 		@param {Boolean} [opts.destroyOnComplete=false] Destroy the animation once it completes?
 			This will free any DOM references the animation may have created. Once
 			the animation completes, you won't be able to start it again.
@@ -744,13 +744,13 @@
 		@description Fired in each frame of the animation.
 
 			This is where you'll specify what your animation does.
-		
+
 		@param {glow.events.Event} event Event Object
 		@example
 			var myAnim = new glow.anim.Animation(5, {
 				tween:glow.tweens.easeBoth()
 			});
-			
+
 			var myDiv = glow.dom.get("#myDiv"),
 			    divStartHeight = myDiv.height(),
 			    divEndHeight = 500,
@@ -769,7 +769,7 @@
 
 			If your listener prevents the default action (for instance,
 			by returning false) the animtion will not be stopped.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 
@@ -851,7 +851,7 @@
 			@description Current tweened value of the animtion, usually between 0 & 1.
 				The value may become greater than 1 or less than 0 depending
 				on the tween used.
-				
+
 				{@link glow.tweens.elasticOut} for instance will result
 				in values higher than 1, but will still end at 1.
 			*/
@@ -899,7 +899,7 @@
 				}
 				return this;
 			},
-			
+
 			/**
 			@name glow.anim.Animation#destroy
 			@function
@@ -984,7 +984,7 @@
 		@param {Boolean} [opts.loop=false] Specifies whether the timeline loops.
 
 			The "complete" event does not fire for looping animations.
-			
+
 		@param {Boolean} [opts.destroyOnComplete=false] Destroy the animation once it completes?
 			This will free any DOM references the animation may have created. Once
 			the animation completes, you won't be able to start it again.
@@ -992,7 +992,7 @@
 		@example
 			// in the simplest form, a timeline can be used to
 			// string multiple animations together:
-			
+
 
 			// make our animations
 			var moveUp = glow.anim.css(myDiv, {
@@ -1024,7 +1024,7 @@
 			This event will also trigger during each loop of a looping animation.
 			If your listener prevents the default action (for instance, by
 			returning false) the timeline will not start.
-		
+
 		@param {glow.events.Event} event Event Object
 		@example
 			var myTimeline = new glow.anim.Timeline([anim1, anim2]);
@@ -1040,7 +1040,7 @@
 
 			If your listener prevents the default action (for instance, by
 			returning false) the timeline will not stop.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -1049,7 +1049,7 @@
 		@description Fired when the timeline ends.
 
 			This event does not fire on looping timelines.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 		/**
@@ -1059,7 +1059,7 @@
 
 			If your listener prevents the default action (for instance, by
 			returning false) the timeline will not resume.
-		
+
 		@param {glow.events.Event} event Event Object
 		*/
 		r.Timeline = function(channels, opts) {
@@ -1239,7 +1239,7 @@
 				}
 				return this;
 			},
-			
+
 			/**
 			@name glow.anim.Timeline#destroy
 			@function
@@ -1253,7 +1253,7 @@
 				this.stop();
 				events.removeAllListeners(this);
 				this._controlAnim.destroy();
-				
+
 				// loop through all the channels
 				i = this._channels.length; while (i--) {
 					// loop through all the animations
@@ -1298,7 +1298,7 @@
 			isPlaying: function() {
 				return this._playing;
 			},
-			
+
 			/**
 			@name glow.anim.Timeline#goTo
 			@function
@@ -1311,13 +1311,13 @@
 
 			@example
 				var myTimeline = new glow.anim.Timeline([anim1, anim2]);
-				
+
 				//start the Timeline 2.5 seconds in
 				myTimeline.goTo(2.5).resume();
-				
+
 			@example
 				var myTimeline = new glow.anim.Timeline([anim1, anim2]);
-				
+
 				//start the Timeline from anim2
 				myTimeline.goTo(anim2).resume();
 			*/
@@ -1330,9 +1330,9 @@
 					// holding var for an anim
 					anim,
 					runningDuration;
-				
+
 				if (typeof pos == "number") {
-					
+
 					if (pos > this.duration) {
 						// if the position is greater than the total, 'loop' the value
 						if (this.loop) {
@@ -1341,10 +1341,10 @@
 							pos = this.duration;
 						}
 					}
-					
+
 					// advance the control anim
 					this._controlAnim.goTo(pos);
-					
+
 					// loop through the animations in all the channels, find out which
 					// one to start playing from
 					for (i = 0; i < channelsLen; i++) {
@@ -1353,7 +1353,7 @@
 						// go through animations in that channel
 						for (j = 0, channelLen = this._channels[i].length; j < channelLen; j++) {
 							anim = this._channels[i][j];
-							
+
 							if (anim instanceof r.Animation) {
 								// we found an animation we should be playing
 								if ( (runningDuration + anim.duration) > pos) {
@@ -1368,7 +1368,7 @@
 								// add that anim to the running total
 								runningDuration += anim.duration;
 							}
-							
+
 						}
 						// right, now we need to move all animations after this
 						// one to the start...
@@ -1382,11 +1382,11 @@
 					for (i = 0; i < channelsLen; i++) {
 						// let's count this to find out what "time" the item the user wants to play is at
 						runningDuration = 0;
-						
+
 						// let's loop through animations in that channel
 						for (j = 0, channelLen = this._channels[i].length; j < channelLen; j++) {
 							anim = this._channels[i][j];
-							
+
 							if (anim === pos) {
 								// oh! We've found the thing they want to play
 								return this.goTo(runningDuration);

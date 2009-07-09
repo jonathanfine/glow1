@@ -19,6 +19,7 @@
 						return false;
 					}
 				);
+                return undefined;
 			},
 			reset: function () {
 				eventCounter = 0;
@@ -279,6 +280,7 @@
 						if (e.key) {
 							return false;
 						}
+                        return undefined;
 					}
 				 );
 				 keyupListener = glow.events.addListener(
@@ -295,6 +297,7 @@
 						if (e.key) {
 							return false;
 						}
+                        return undefined;
 					}
 				 );
 			},
@@ -342,7 +345,7 @@
 			return res;
 		};
 	}
-	
+
 	var keysPressed = [];
 	registerTestCase(
 		new ManualTestCase({

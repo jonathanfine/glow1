@@ -11,7 +11,7 @@
 	library: ["glow", "@VERSION@"],
 	depends: [["glow", "@VERSION@", 'glow.dom']],
 	builder: function(glow) {
-		
+
 		var $ = glow.dom.get;
 		var r = {};
 		var eventid = 1;
@@ -67,7 +67,7 @@
 		/*
 		PrivateMethod: removeKeyListener
 			Removes a listener for a key combination.
-		
+
 		Arguments:
 			ident - identifier returned from addKeyListener.
 		*/
@@ -112,9 +112,9 @@
 						}
 					}
 				}
-				
-				if (! listeners) { return; }
-				
+
+				if (! listeners) { return undefined; }
+
 				for (var i = 0, len = listeners.length; i < len; i++) {
 					//call listener and look out for preventing the default
 					if (listeners[i][2].call(listeners[i][3] || this, e) === false) {
@@ -124,7 +124,7 @@
 				return !e.defaultPrevented();
 			});
 		}
-		
+
 		/*
 		PrivateMethod: clearEvents
 			Removes all current listeners to avoid IE mem leakage
@@ -152,7 +152,7 @@
 		*/
 		function addDomListener (attachTo, name) {
 			var wheelEventName;
-			
+
 			if (glow.env.opera) {
 				if (name.toLowerCase() == 'resize' && !operaResizeListener && attachTo == window) {
 					operaResizeListener = r.addListener(window.document.body, 'resize', function (e) { r.fire(window, 'resize', e); });
@@ -160,7 +160,7 @@
 					operaDocScrollListener = r.addListener(window.document, 'scroll', function (e) { r.fire(window, 'scroll', e); });
 				}
 			}
-			
+
 			var callback = function (e) {
 				if (! e) { e = window.event; }
 				var event = new r.Event(),
@@ -184,7 +184,7 @@
 						e.wheelDelta ? e.wheelDelta / 120 :
 						e.detail ? - e.detail / 3 :
 							0;
-					if (event.wheelDelta == 0) { return; }
+					if (event.wheelDelta == 0) { return undefined; }
 				}
 				if (lowerCaseName.indexOf("key") != -1) {
 					event.altKey = !! e.altKey;
@@ -209,7 +209,7 @@
 							event.keyCode = previousKeyDownKeyCode;
 						}
 					}
-					
+
 					// make things a little more sane in opera
 					if (event.charCode && event.charCode <= 49) { event.charCode = undefined; }
 
@@ -240,8 +240,9 @@
 				if (event.defaultPrevented()) {
 					return false;
 				}
+                return undefined;
 			};
-			
+
 			if (attachTo.addEventListener && (!glow.env.webkit || glow.env.webkit > 418)) {
 				attachTo.addEventListener(name.toLowerCase() == 'mousewheel' && glow.env.gecko ? 'DOMMouseScroll' : name, callback, false);
 			} else {
@@ -252,7 +253,7 @@
 						// we still need to return false if either the existing or new callback returns false
 						var existingReturn = existing.apply(this, arguments),
 							callbackReturn = callback.apply(this, arguments);
-						
+
 						return (existingReturn !== false) && (callbackReturn !== false);
 					};
 				} else {
@@ -261,20 +262,20 @@
 			}
 			attachTo = null;
 		}
-		
+
 		/**
-		@name glow.events._copyListeners 
+		@name glow.events._copyListeners
 		@function
 		@private
 		@description Maps event listeners from one set of nodes to another in the order they appear in each NodeList.
 			Note, it doesn't copy events from a node's children.
-		
-		
+
+
 		@param {NodeList} from NodeList to copy events from
 		@param {NodeList} to NodeList to copy events to
-	
+
 		@returns {Boolean}
-		
+
 		@example
 			var listener = glow.events.addListener(...);
 			glow.events.removeListener(listener);
@@ -292,7 +293,7 @@
 				listenersLen,
 				// listener definition from listenersByObjId
 				listener;
-			
+
 			// loop through all items
 			while(i--) {
 				// has a glow event been assigned to this node?
@@ -312,39 +313,39 @@
 					}
 				}
 			}
-		}
+		};
 
 		/**
 		@name glow.events.addListener
 		@function
 		@description Adds an event listener to an object (e.g. a DOM Element or Glow widget).
-		
+
 		@param {String | NodeList | Object} attachTo The object to attach the event listener to.
-		
-			If the parameter is a string, then it is treated as a CSS selector 
+
+			If the parameter is a string, then it is treated as a CSS selector
 			and the listener is attached to all matching elements.
-		   	
-		   	If the parameter is a {@link glow.dom.NodeList}, then the listener 
+
+		   	If the parameter is a {@link glow.dom.NodeList}, then the listener
 		   	is attached to all elements in the NodeList.
-		
-		@param {String} name The event name. 
-		
-			Listeners for DOM events should not begin with 'on' (i.e. 'click' 
+
+		@param {String} name The event name.
+
+			Listeners for DOM events should not begin with 'on' (i.e. 'click'
 			rather than 'onclick')
-				   
+
 		@param {Function} callback The function to be called when the event fires.
-			
+
 		@param {Object} [context] The execution scope of the callback.
-		
-			If this parameter is not passed then the attachTo object will be the 
+
+			If this parameter is not passed then the attachTo object will be the
 			scope of the callback.
-		
+
 		@returns {Number | Undefined}
-		
-			A unique identifier for the event suitable for passing to 
-			{@link glow.events.removeListener}. If an empty NodeList or CSS 
+
+			A unique identifier for the event suitable for passing to
+			{@link glow.events.removeListener}. If an empty NodeList or CSS
 			selector that returns no elements is passed, then undefined is returned.
-		
+
 		@example
 			glow.events.addListener('#nav',	'click', function () {
 				alert('nav clicked');
@@ -359,7 +360,7 @@
 				if (! glow.dom) { throw "glow.dom must be loaded to use a selector as the first argument to glow.events.addListener"; }
 				attachTo = $(attachTo);
 			}
-			
+
 			if (glow.dom && attachTo instanceof glow.dom.NodeList) {
 				var listenerIds = [],
 					i = attachTo.length;
@@ -368,10 +369,10 @@
 				while (i--) {
 					listenerIds[i] = r.addListener(attachTo[i], name, callback, context);
 				}
-				
+
 				return listenerIds;
 			}
-			
+
 			var objIdent;
 			if (! (objIdent = attachTo[psuedoPrivateEventKey])) {
 				objIdent = attachTo[psuedoPrivateEventKey] = objid++;
@@ -394,14 +395,14 @@
 		};
 
 		/**
-		@name glow.events.removeListener 
+		@name glow.events.removeListener
 		@function
 		@description Removes a listener created with addListener
 
 		@param {Number} ident An identifier returned from {@link glow.events.addListener}.
-	
+
 		@returns {Boolean}
-		
+
 		@example
 			var listener = glow.events.addListener(...);
 			glow.events.removeListener(listener);
@@ -431,25 +432,25 @@
 				delete listenersByObjId[listener[0]][listener[1]];
 			}
 			var listenersLeft = false;
-			for (var i in listenersByObjId[listener[0]]) { listenersLeft = true; break;	}
+			for (i in listenersByObjId[listener[0]]) { listenersLeft = true; break;	}
 			if (! listenersLeft) {
 				delete listenersByObjId[listener[0]];
 			}
 			return true;
 		};
-		
+
 		/**
-		@name glow.events.removeAllListeners 
+		@name glow.events.removeAllListeners
 		@function
 		@description Removes all listeners attached to a given object
 
 		@param {String | glow.dom.NodeList | Object | Object[] } detachFrom The object(s) to remove listeners from.
-		
+
 			If the parameter is a string, then it is treated as a CSS selector,
 			listeners are removed from all nodes.
-		
+
 		@returns glow.events
-		
+
 		@example
 			glow.events.removeAllListeners("#myDiv");
 		*/
@@ -460,7 +461,7 @@
 				listenerIdsLen = 0,
 				eventName,
 				events;
-			
+
 			// cater for selector
 			if (typeof obj == "string") {
 				// get nodes
@@ -474,10 +475,10 @@
 				}
 				return r;
 			}
-			
+
 			// get the objects id
 			objId = obj[psuedoPrivateEventKey];
-			
+
 			// if it doesn't have an id it doesn't have events... return
 			if (!objId) {
 				return r;
@@ -493,7 +494,7 @@
 				r.removeListener( listenerIds );
 			}
 			return r;
-		}
+		};
 
 		/**
 		@name glow.events.fire
@@ -501,20 +502,20 @@
 		@description Fires an event on an object.
 
 		@param {Object} attachedTo The object that the event is associated with.
-		
+
 		@param {String} name The name of the event.
-		
+
 			Event names should not start with the word 'on'.
-			
+
 		@param {Object | glow.events.Event} [event] An event object or properties to add to a default event object
-		
+
 			If not specified, a generic event object is created. If you provide a simple
 			object, a default Event will be created with the properties from the provided object.
-	
+
 		@returns {Object}
-		
+
 			The event object.
-		
+
 		@example
 			// firing a custom event
 			Ball.prototype.move = function () {
@@ -524,18 +525,18 @@
 					var event = glow.events.fire(this, 'bounce', {
 						bounceCount: this._bounceCount
 					});
-					
+
 					// handle what to do if a listener returned false
 					if ( event.defaultPrevented() ) {
 						this.stopMoving();
 					}
 				}
 			};
-			
+
 		@example
 			// listening to a custom event
 			var myBall = new Ball();
-			
+
 			glow.events.addListener(myBall, "bounce", function(event) {
 				if (event.bounceCount == 3) {
 					// stop bouncing after 3 bounces
@@ -547,8 +548,8 @@
    			if (! attachedTo) throw 'glow.events.fire: required parameter attachedTo not passed (name: ' + name + ')';
    			if (! name) throw 'glow.events.fire: required parameter name not passed';
 			if (! e) { e = new r.Event(); }
-			if ( e.constructor === Object ) { e = new r.Event( e ) }
-			
+			if ( e.constructor === Object ) { e = new r.Event( e ); }
+
 			e.type = name;
 			e.attachedTo = attachedTo;
 			if (! e.source) { e.source = attachedTo; }
@@ -556,14 +557,14 @@
 			var objIdent,
 				objListeners,
 				objEventListeners = objListeners && objListeners[name];
-			
+
 			// 3 assignments, but stop assigning if any of them are false
 			(objIdent = attachedTo[psuedoPrivateEventKey]) &&
 				(objListeners = listenersByObjId[objIdent]) &&
 				(objEventListeners = objListeners[name]);
-			
+
 			if (! objEventListeners) { return e; }
-			
+
 			var listener;
 
 			// we make a copy of the listeners before calling them, as the event handlers may
@@ -584,20 +585,20 @@
 		@deprecated
 		@function
 		@description Adds an event listener for a keyboard event HELLO.
-		
+
 			<p><em>Notes for Opera</em></p>
-			
-			It is currently impossible to differentiate certain key events in 
-			Opera (for example the RIGHT (the right arrow key) and the 
-			apostrope (') result in the same code). For this reason pressing 
-			either of these keys will result in key listeners specified as 
+
+			It is currently impossible to differentiate certain key events in
+			Opera (for example the RIGHT (the right arrow key) and the
+			apostrope (') result in the same code). For this reason pressing
+			either of these keys will result in key listeners specified as
 			"RIGHT" and/or "'" to be fired.
-			
+
 			<p><em>Key Identifiers</em></p>
-			
-			The key param uses the following strings to refer to special keys, 
+
+			The key param uses the following strings to refer to special keys,
 			i.e. non alpha-numeric keys.
-			
+
 			<ul>
 			<li>CAPSLOCK</li>
 			<li>NUMLOCK</li>
@@ -637,48 +638,48 @@
 			<li>DOWN</li>
 			</ul>
 
-		@param {String} key The key or key combination to listen to. 
-		
-			This parameter starts with modifier keys 'CTRL', 'ALT' and 
-			'SHIFT'. Modifiers can appear in any combination and order and are 
+		@param {String} key The key or key combination to listen to.
+
+			This parameter starts with modifier keys 'CTRL', 'ALT' and
+			'SHIFT'. Modifiers can appear in any combination and order and are
 			separated by a '+'.
-			
-			Following any modifiers is the key character. To specify a 
-			character code, use the appropriate escape sequence (e.g. 
-			"CTRL+\u0065" = CTRL+e"). 
-			
-			To specify a special key, the key character should be replaced with 
-			a key identifier, see description below (e.g. "RIGHT" specifies the 
+
+			Following any modifiers is the key character. To specify a
+			character code, use the appropriate escape sequence (e.g.
+			"CTRL+\u0065" = CTRL+e").
+
+			To specify a special key, the key character should be replaced with
+			a key identifier, see description below (e.g. "RIGHT" specifies the
 			right arrow key).
-			
+
 		@param {String} type The type of key press to listen to.
-			
+
 			Possible values for this parameter are:
-			
+
 			<dl>
 			<dt>press</dt><dd>the key is pressed (comparable to a mouse click)</dd>
 			<dt>down</dt><dd>the key is pushed down</dd>
 			<dt>up</dt><dd>the key is released</dd>
 			</dl>
-		
+
 		@param {Function} callback The function to be called when the event fires.
-			
+
 		@param {Object} [context] The execution scope of the callback.
-	
-			If this parameter is not passed then the attachTo object will be the 
+
+			If this parameter is not passed then the attachTo object will be the
 			context of the callback.
-	
+
 		@returns {Number}
-		
-			A unique identifier for the event suitable for passing to 
+
+			A unique identifier for the event suitable for passing to
 			{@link glow.events.removeListener}.
-		
+
 		@example
 			glow.events.addKeyListener("CTRL+ALT+a", "press",
 		        function () { alert("CTRL+ALT+a pressed"); }
 		    );
 			glow.events.addKeyListener("SHIFT+\u00A9", "down",
-				function () { alert("SHIFT+© pushed") }
+				function () { alert("SHIFT+Â© pushed") }
 			);
 		*/
 		var keyRegex = /^((?:(?:ctrl|alt|shift)\+)*)(?:(\w+|.)|[\n\r])$/i;
@@ -712,66 +713,66 @@
 			Each key-value pair in the object will be added to the Event as
 			properties
 		@description Object passed into all events
-			
-			Some of the properties described below are only available for 
-			certain event types. These are listed in the property descriptions 
+
+			Some of the properties described below are only available for
+			certain event types. These are listed in the property descriptions
 			where applicable.
-			
+
 			<p><em>Notes for Opera</em></p>
-			
-			The information returned from Opera about key events does not allow 
-			certain keys to be differentiated. This mainly applies to special 
-			keys, such as the arrow keys, function keys, etc. which conflict 
+
+			The information returned from Opera about key events does not allow
+			certain keys to be differentiated. This mainly applies to special
+			keys, such as the arrow keys, function keys, etc. which conflict
 			with some printable characters.
-			
+
 		*/
 		r.Event = function ( obj ) {
 			if( obj ) {
 				glow.lang.apply( this, obj );
 			}
 		};
-		
+
 		/**
 		@name glow.events.Event#attachedTo
 		@type Object | Element
 		@description The object/element that the listener is attached to.
-		
+
 			See the description for 'source' for more details.
 		*/
-		
+
 		/**
 		@name glow.events.Event#source
 		@type Element
 		@description The actual object/element that the event originated from.
-			
-			For example, you could attach a listener to an 'ol' element to 
-			listen for clicks. If the user clicked on an 'li' the source property 
+
+			For example, you could attach a listener to an 'ol' element to
+			listen for clicks. If the user clicked on an 'li' the source property
 			would be the 'li' element, and 'attachedTo' would be the 'ol'.
 		*/
-		
+
 		/**
 		@name glow.events.Event#pageX
 		@type Number
 		@description The horizontal position of the mouse pointer in the page in pixels.
-		
+
 			<p><em>Only available for mouse events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#pageY
 		@type Number
 		@description The vertical position of the mouse pointer in the page in pixels.
-		
+
 			<p><em>Only available for mouse events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#button
 		@type Number
 		@description  A number representing which button was pressed.
-		
+
 			<p><em>Only available for mouse events.</em></p>
-			
+
 			0 for the left button, 1 for the middle button or 2 for the right button.
 		*/
 
@@ -779,103 +780,103 @@
 		@name glow.events.Event#relatedTarget
 		@type Element
 		@description The element that the mouse has come from or is going to.
-		
+
 			<p><em>Only available for mouse over/out events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#wheelDelta
 		@type Number
 		@description The number of clicks up (positive) or down (negative) that the user moved the wheel.
-		
+
 			<p><em>Only available for mouse wheel events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#ctrlKey
 		@type Boolean
 		@description Whether the ctrl key was pressed during the key event.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#shiftKey
 		@type Boolean
 		@description  Whether the shift key was pressed during the key event.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#altKey
 		@type Boolean
 		@description Whether the alt key was pressed during the key event.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
 		*/
-		
+
 		/**
-		@name glow.events.Event#capsLock 			
+		@name glow.events.Event#capsLock
 		@type Boolean | Undefined
 		@description Whether caps-lock was on during the key event
-		
+
 			<p><em>Only available for keyboard events.</em></p>
-		
-			If the key is not alphabetic, this property will be undefined 
+
+			If the key is not alphabetic, this property will be undefined
 			as it is not possible to tell if caps-lock is on in this scenario.
 		*/
-		
+
 		/**
 		@name glow.events.Event#keyCode
 		@type Number
 		@description An integer number represention of the keyboard key that was pressed.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
 		*/
-		
+
 		/**
 		@name glow.events.Event#key
 		@type String | Undefined
 		@description  A short identifier for the key for special keys.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
-			
+
 			If the key was not a special key this property will be undefined.
-			
+
 			See the list of key identifiers in {@link glow.events.addKeyListener}
 		*/
-		
+
 		/**
 		@name glow.events.Event#charCode
 		@type Number | Undefined
 		@description The unicode character code for a printable character.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
-			
+
 			This will be undefined if the key was not a printable character.
 		*/
-		
+
 		/**
 		@name glow.events.Event#chr
 		@type String
 		@description A printable character string.
-		
+
 			<p><em>Only available for keyboard events.</em></p>
-			
+
 			The string of the key that was pressed, for example 'j' or 's'.
-			
+
 			This will be undefined if the key was not a printable character.
 		*/
-		
+
 
 		/**
 		@name glow.events.Event#preventDefault
 		@function
-		@description Prevent the default action for events. 
-		
+		@description Prevent the default action for events.
+
 			This can also be achieved by returning false from an event callback
-		
+
 		*/
 		r.Event.prototype.preventDefault = function () {
 			if (this[psuedoPreventDefaultKey]) { return; }
@@ -890,9 +891,9 @@
 		@name glow.events.Event#defaultPrevented
 		@function
 		@description Test if the default action has been prevented.
-		
+
 		@returns {Boolean}
-		
+
 			True if the default action has been prevented.
 		*/
 		r.Event.prototype.defaultPrevented = function () {
@@ -902,13 +903,13 @@
 		/**
 		@name glow.events.Event#stopPropagation
 		@function
-		@description Stops the event propagating. 
-		
-			For DOM events, this stops the event bubbling up through event 
+		@description Stops the event propagating.
+
+			For DOM events, this stops the event bubbling up through event
 			listeners added to parent elements. The event object is marked as
-			having had propagation stopped (see 
+			having had propagation stopped (see
 			{@link glow.events.Event#propagationStopped propagationStopped}).
-		
+
 		@example
 			// catch all click events that are not links
 			glow.events.addListener(
@@ -937,16 +938,16 @@
 		@name glow.events.Event#propagationStopped
 		@function
 		@description Tests if propagation has been stopped for this event.
-		
+
 		@returns {Boolean}
-		
+
 			True if event propagation has been prevented.
 
 		*/
 		r.Event.prototype.propagationStopped = function () {
 			return !! this[psuedoStopPropagationKey];
 		};
-		
+
 		//cleanup to avoid mem leaks in IE
 		r.addListener(window, "unload", clearEvents);
 

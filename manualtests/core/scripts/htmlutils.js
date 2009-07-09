@@ -21,7 +21,7 @@
 function classCreate() {
     return function() {
       this.initialize.apply(this, arguments);
-    }
+    };
 }
 
 function objectExtend(destination, source) {
@@ -58,7 +58,7 @@ function fnBind() {
   var args = sel$A(arguments), __method = args.shift(), object = args.shift();
   var retval = function() {
     return __method.apply(object, args.concat(sel$A(arguments)));
-  }
+  };
   retval.__method = __method;
   return retval;
 }
@@ -67,7 +67,7 @@ function fnBindAsEventListener(fn, object) {
   var __method = fn;
   return function(event) {
     return __method.call(object, event || window.event);
-  }
+  };
 }
 
 function removeClassName(element, name) {
@@ -98,7 +98,7 @@ function elementGetStyle(element, style) {
       }
     }
 
-    /** DGF necessary? 
+    /** DGF necessary?
     if (window.opera && ['left', 'top', 'right', 'bottom'].include(style))
       if (Element.getStyle(element, 'position') == 'static') value = 'auto'; */
 
@@ -247,12 +247,12 @@ function getInputValue(inputElement) {
 function triggerEvent(element, eventType, canBubble, controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown) {
     canBubble = (typeof(canBubble) == undefined) ? true : canBubble;
     if (element.fireEvent) {
-        var evt = createEventObject(element, controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown);        
+        var evt = createEventObject(element, controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown);
         element.fireEvent('on' + eventType, evt);
     }
     else {
         var evt = document.createEvent('HTMLEvents');
-        
+
         try {
             evt.shiftKey = shiftKeyDown;
             evt.metaKey = metaKeyDown;
@@ -263,7 +263,7 @@ function triggerEvent(element, eventType, canBubble, controlKeyDown, altKeyDown,
             // we'll have to ignore them here
             LOG.exception(e);
         }
-        
+
         evt.initEvent(eventType, canBubble, true);
         element.dispatchEvent(evt);
     }
@@ -311,7 +311,7 @@ function triggerKeyEvent(element, eventType, keySequence, canBubble, controlKeyD
             evt.initKeyEvent(eventType, true, true, window, controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown, keycode, keycode);
         } else {
             evt = document.createEvent('UIEvents');
-            
+
             evt.shiftKey = shiftKeyDown;
             evt.metaKey = metaKeyDown;
             evt.altKey = altKeyDown;
@@ -338,7 +338,7 @@ function addLoadListener(element, command) {
     LOG.debug('Adding loadListenter for ' + element + ', ' + command);
     var augmentedCommand = function() {
         command.call(this, element);
-    }
+    };
     if (window.addEventListener && !browserVersion.isOpera)
         element.addEventListener("load", augmentedCommand, true);
     else if (window.attachEvent)
@@ -394,9 +394,9 @@ function isArray(x) {
 
 function absolutify(url, baseUrl) {
     /** returns a relative url in its absolute form, given by baseUrl.
-    * 
+    *
     * This function is a little odd, because it can take baseUrls that
-    * aren't necessarily directories.  It uses the same rules as the HTML 
+    * aren't necessarily directories.  It uses the same rules as the HTML
     * &lt;base&gt; tag; if the baseUrl doesn't end with "/", we'll assume
     * that it points to a file, and strip the filename off to find its
     * base directory.
@@ -404,19 +404,19 @@ function absolutify(url, baseUrl) {
     * So absolutify("foo", "http://x/bar") will return "http://x/foo" (stripping off bar),
     * whereas absolutify("foo", "http://x/bar/") will return "http://x/bar/foo" (preserving bar).
     * Naturally absolutify("foo", "http://x") will return "http://x/foo", appropriately.
-    * 
+    *
     * @param url the url to make absolute; if this url is already absolute, we'll just return that, unchanged
     * @param baseUrl the baseUrl from which we'll absolutify, following the rules above.
     * @return 'url' if it was already absolute, or the absolutized version of url if it was not absolute.
     */
-    
+
     // DGF isn't there some library we could use for this?
-        
+
     if (/^\w+:/.test(url)) {
         // it's already absolute
         return url;
     }
-    
+
     var loc;
     try {
         loc = parseUrl(baseUrl);
@@ -431,34 +431,34 @@ function absolutify(url, baseUrl) {
     }
     loc.search = null;
     loc.hash = null;
-    
+
     // if url begins with /, then that's the whole pathname
     if (/^\//.test(url)) {
         loc.pathname = url;
         var result = reassembleLocation(loc);
         return result;
     }
-    
+
     // if pathname is null, then we'll just append "/" + the url
     if (!loc.pathname) {
         loc.pathname = "/" + url;
         var result = reassembleLocation(loc);
         return result;
     }
-    
+
     // if pathname ends with /, just append url
     if (/\/$/.test(loc.pathname)) {
         loc.pathname += url;
         var result = reassembleLocation(loc);
         return result;
     }
-    
+
     // if we're here, then the baseUrl has a pathname, but it doesn't end with /
     // in that case, we replace everything after the final / with the relative url
     loc.pathname = loc.pathname.replace(/[^\/\\]+$/, url);
     var result = reassembleLocation(loc);
     return result;
-    
+
 }
 
 var URL_REGEX = /^((\w+):\/\/)(([^:]+):?([^@]+)?@)?([^\/\?:]*):?(\d+)?(\/?[^\?#]+)?\??([^#]+)?#?(.+)?/;
@@ -497,15 +497,15 @@ function reassembleLocation(loc) {
     if (loc.host) {
         url += loc.host;
     }
-    
+
     if (loc.port) {
         url += ":" + loc.port;
     }
-    
+
     if (loc.pathname) {
         url += loc.pathname;
     }
-    
+
     if (loc.search) {
         url += "?" + loc.search;
     }
@@ -520,7 +520,7 @@ function reassembleLocation(loc) {
 function canonicalize(url) {
     var tempLink = window.document.createElement("link");
     tempLink.href = url; // this will canonicalize the href on most browsers
-    var loc = parseUrl(tempLink.href)
+    var loc = parseUrl(tempLink.href);
     if (!/\/\.\.\//.test(loc.pathname)) {
     	return tempLink.href;
     }
@@ -544,8 +544,9 @@ function extractExceptionMessage(ex) {
     if (ex == null) return "null exception";
     if (ex.message != null) return ex.message;
     if (ex.toString && ex.toString() != null) return ex.toString();
-}
-    
+    return undefined;
+};
+
 
 function describe(object, delimiter) {
     var props = new Array();
@@ -797,7 +798,7 @@ function openSeparateApplicationWindow(url, suppressMozillaWarning) {
 
     var appWindow = window.open(url + '?start=true', 'main');
     if (appWindow == null) {
-        var errorMessage = "Couldn't open app window; is the pop-up blocker enabled?"
+        var errorMessage = "Couldn't open app window; is the pop-up blocker enabled?";
         LOG.error(errorMessage);
         throw new Error("Couldn't open app window; is the pop-up blocker enabled?");
     }
@@ -841,7 +842,7 @@ objectExtend(URLConfiguration.prototype, {
     },
 
     _getQueryParameter: function(searchKey) {
-        var str = this.queryString
+        var str = this.queryString;
         if (str == null) return null;
         var clauses = str.split('&');
         for (var i = 0; i < clauses.length; i++) {
@@ -876,10 +877,10 @@ objectExtend(URLConfiguration.prototype, {
     isMultiWindowMode:function() {
         return this._isQueryParameterTrue('multiWindow');
     },
-    
+
     getBaseUrl:function() {
         return this._getQueryParameter('baseUrl');
-            
+
     }
 });
 

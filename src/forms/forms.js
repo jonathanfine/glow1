@@ -60,7 +60,7 @@ glow.forms.Form = function(formNode, opts) { /*debug*///console.log("glow.forms.
 			return false;
 		}
 	);
-}
+};
 
 /**
 	@name glow.forms.Form#validate
@@ -81,7 +81,7 @@ glow.forms.Form.prototype.validate = function(eventName, fieldName) { /*debug*//
 
 	this._fieldName = fieldName;
 	this._nextTest();
-}
+};
 
 /**
 	Advance the test cursor to get the next test in the queue and then run it.
@@ -113,7 +113,7 @@ glow.forms.Form.prototype._nextTest = function() { /*debug*///console.log("glow.
 	if (!fieldValue.join) fieldValue = [fieldValue];
 
 	var callback = function(o) { // closure
-		return function() { o._onTestResult.apply(o, arguments) };
+		return function() { o.onTestResult.apply(o, arguments); };
 	}(this);
 
 	// only run tests that are tied to the eventName being validated
@@ -125,7 +125,7 @@ glow.forms.Form.prototype._nextTest = function() { /*debug*///console.log("glow.
 		// skip tests that are not tied to the fieldName being validated
 		if (this._fieldName && this._fieldName != currentTest.name) {
 			this._nextTest();
-			return;
+			return undefined;
 		}
 
 		// run the test, if it exists
@@ -137,7 +137,7 @@ glow.forms.Form.prototype._nextTest = function() { /*debug*///console.log("glow.
 	else {
 		this._nextTest();
 	}
-}
+};
 
 /**
 	Advance the field cursor to get the next field in the queue.
@@ -160,7 +160,7 @@ glow.forms.Form.prototype._nextField = function() { /*debug*///console.log("glow
 	}
 
 	return true;
-}
+};
 
 /**
 	@name glow.forms.Form#_onTestResult
@@ -195,7 +195,7 @@ glow.forms.Form.prototype._onTestResult = function(result, message) { /*debug*//
 	}
 
 	this._nextTest();
-}
+};
 
 /**
 	@name glow.forms.Form#addTests
@@ -203,11 +203,11 @@ glow.forms.Form.prototype._onTestResult = function(result, message) { /*debug*//
 	@description Add one or more tests to a field.
 	@param {String} fieldName The name of the field to add tests to.
 	@param {Array} [spec]
-	
+
 		Test specifications identify the type of test to be run on a field to
 		determine whether it contains desired data. See docs on the
 		{@link glow.forms.tests types of tests}.
-	
+
 	@example
 	//pattern for a test specification
 	[
@@ -218,7 +218,7 @@ glow.forms.Form.prototype._onTestResult = function(result, message) { /*debug*//
 	    message : "Incorrect value" //a custom error message to display
 	  }
 	]
-	
+
 	@example
 	//setting a form up for validation
 	var myForm = new glow.forms.Form(glow.dom.get("#myFormId"))
@@ -240,13 +240,13 @@ glow.forms.Form.prototype.addTests = function(fieldName /*...*/) { /*debug*///co
 
 	var changeCallback = function(that) {
 		return function() {
-			that.validate.apply(that, ["change", fieldName])
+			that.validate.apply(that, ["change", fieldName]);
 		};
 	}(this);
 
 	var clickCallback = function(that) {
 		return function() {
-			that.validate.apply(that, ["click", fieldName])
+			that.validate.apply(that, ["click", fieldName]);
 		};
 	}(this);
 
@@ -289,8 +289,8 @@ glow.forms.Form.prototype.addTests = function(fieldName /*...*/) { /*debug*///co
 			var inputs = this.formNode.get("*").each(function (i) {
 				if (this.name == fieldName) {
 					// FIXME: adding idleTimeoutID to HTML element, is this the best way?
-					glow.events.addListener(this, "keyup", function(t){ return function() {window.clearTimeout(this.idleTimeoutID); if (this.value) this.idleTimeoutID = window.setTimeout(idleCallback, t)} }(idleDelay));
-					glow.events.addListener(this, "blur", function() {window.clearTimeout(this.idleTimeoutID)});
+					glow.events.addListener(this, "keyup", function(t){ return function() {window.clearTimeout(this.idleTimeoutID); if (this.value) this.idleTimeoutID = window.setTimeout(idleCallback, t);}; }(idleDelay));
+					glow.events.addListener(this, "blur", function() {window.clearTimeout(this.idleTimeoutID);});
 
 					idleCallback.added = true;
 				}
@@ -301,7 +301,7 @@ glow.forms.Form.prototype.addTests = function(fieldName /*...*/) { /*debug*///co
 	this._fields.push(field);
 
 	return this; // chained
-}
+};
 
 /**
 	@name glow.forms.ValidateResult
@@ -320,7 +320,7 @@ glow.forms.ValidateResult = function(eventName) {
 	this.errorCount = 0;
 	this.value = undefined;
 	this.fields = [];
-}
+};
 
 glow.lang.extend(glow.forms.ValidateResult, glow.events.Event);
 
@@ -466,7 +466,7 @@ glow.forms.tests = {
 	range: function(values, opts, callback) { /*debug*///console.log("glow.forms.tests.range()");
 		var minmax = opts.arg.split(".."); // like "0..10"
 		if (typeof minmax[0] == "undefined" || typeof minmax[1] == "undefined") {
-			throw "Range test requires a parameter like 0..10."
+			throw "Range test requires a parameter like 0..10.";
 		}
 		var message = opts.message || "The value must be "+minmax[0]+" or greater, and less than "+minmax[1]+".";
 
@@ -704,9 +704,9 @@ glow.forms.tests = {
 		@function
 		@description Send the data to the server for testing.
 			A request to the given URL will be made and the response will be passed to the given callback.
-			
+
 			'arg' is the function to handle the response from the server.
-			
+
 			'url' is the url to call. You can use placeholders in here for form values (see example).
 		@example
 		function handleResponseText(response) {
@@ -751,11 +751,11 @@ glow.forms.tests = {
 		@name glow.forms.tests.custom
 		@function
 		@description Create a custom test.
-		
+
 			'arg' is a function which tests the form value.
-			
+
 			The function is given the following parameters:
-			
+
 			<dl>
 				<dt>values</dt>
 				<dd>
@@ -778,7 +778,7 @@ glow.forms.tests = {
 					This is an object of all values captured in the form.
 				</dd>
 			</dl>
-		
+
 		@example
 		myForm.addTests(
 			"username",
@@ -850,7 +850,7 @@ glow.forms.tests = {
 		}
 		callback(glow.forms.PASS, message);
 	}
-}
+};
 
 
 /**
@@ -881,10 +881,10 @@ var feedback = glow.forms.feedback = {};
 @see <a href="../furtherinfo/forms/defaultfeedback">Using the default form feedback</a>
 */
 feedback.defaultFeedback = (function() {
-	
+
 	//a hidden form element used to update a screenreader's buffer
 	var screenReaderBufferUpdater;
-	
+
 	//attempts to update the buffer of the screen reader
 	function updateScreenReaderBuffer() {
 		if (!screenReaderBufferUpdater) {
@@ -892,7 +892,7 @@ feedback.defaultFeedback = (function() {
 		}
 		screenReaderBufferUpdater[0].value++;
 	}
-	
+
 	//write out the messages which appear next to (or near) the fields
 	function inlineErrors(response) {
 		var fields = response.fields, //field test results
@@ -908,7 +908,7 @@ feedback.defaultFeedback = (function() {
 			msgContainer = glow.dom.get("." + fields[i].name.replace(/(\W)/g, "\\$1") + "-msgContainer");
 			if (!msgContainer[0] && fieldElm.length == 1) {
 				//none found, try and get the label
-				msgContainer = response.form.formNode.get("label").filter(function() { return this.htmlFor == fieldElm[0].id })
+				msgContainer = response.form.formNode.get("label").filter(function() { return this.htmlFor == fieldElm[0].id });
 			}
 
 			labelError = msgContainer.get("span.glow-errorMsg");
@@ -951,7 +951,7 @@ feedback.defaultFeedback = (function() {
 			promptContainer = glow.dom.get("." + fields[i].name.replace(/(\W)/g, "\\$1") + "-prompt");
 			if (!promptContainer[0] && fieldElm.length == 1) {
 				//we don't have a default, get the label
-				promptContainer = response.form.formNode.get("label").filter(function() { return this.htmlFor == fieldElm[0].id })
+				promptContainer = response.form.formNode.get("label").filter(function() { return this.htmlFor == fieldElm[0].id });
 			}
 			//did we get a prompt container?
 			if (promptContainer[0]) {
@@ -963,7 +963,7 @@ feedback.defaultFeedback = (function() {
 				}
 			} else {
 				//else we just use the field name
-				prompt = fields[i].name.replace(/^\w/, function(s) { return s.toUpperCase() } );
+				prompt = fields[i].name.replace(/^\w/, function(s) { return s.toUpperCase(); } );
 			}
 
 			if (!fields[i].result) {
@@ -974,12 +974,12 @@ feedback.defaultFeedback = (function() {
 		glow.anim.css(errorSummary, "0.5", {
 			opacity: {from: 0, to: 1}
 		}, {tween: glow.tweens.easeOut()}).start();
-		
+
 		// if the error summary has been hidden, IE7 throws an exception here
-		try {		
+		try {
 			errorSummary[0].focus();
 		} catch (e) {}
-		
+
 		updateScreenReaderBuffer();
 	}
 
@@ -989,7 +989,7 @@ feedback.defaultFeedback = (function() {
 			if (!response.errorCount) {
 				//remove existing summary
 				response.form.formNode.get("div.glow-errorSummary").remove();
-				return;
+				return undefined;
 			}
 			summaryError(response);
 		}
@@ -999,9 +999,9 @@ feedback.defaultFeedback = (function() {
 		setTimeout(function() {
 			inlineErrors(response);
 		}, 0);
-		
+
 		return false;
-	}
+	};
 }());
 
 	}

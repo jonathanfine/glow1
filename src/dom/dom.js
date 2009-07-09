@@ -126,20 +126,20 @@
 			nodePropertiesCloned,
 			// used to convert divs to strings
 			tmpDiv = doc.createElement("div");
-		
+
 		// clean up IE's mess
 		if (env.ie) {
 			window.attachEvent("onunload", function() {
 				tmpDiv = null;
 			});
 		}
-		
+
 		glow.ready(function() {
 			docBody = doc.body;
 			docElm = doc.documentElement;
 		});
-		
-		
+
+
 		// test for nodePropertiesCloned
 		(function() {
 			var div = doc.createElement("div");
@@ -298,7 +298,7 @@
 				}
 				ucheck++;
 				return r;
-			}
+			};
 		} else {
 			unique = function(aNodes) {
 				if (aNodes.length == 1) { return aNodes; }
@@ -316,7 +316,7 @@
 				}
 				ucheck++;
 				return r;
-			}
+			};
 		}
 
 		/*
@@ -355,7 +355,7 @@
 				return r;
 			};
 		}
-		
+
 		/*
 			Get the child elements for an html node
 		*/
@@ -364,7 +364,7 @@
 				childNodes = node.childNodes,
 				i = 0,
 				ri = 0;
-			
+
 			for (; childNodes[i]; i++) {
 				if (childNodes[i].nodeType == 1 && childNodes[i].nodeName != "!") {
 					r[ri++] = childNodes[i];
@@ -372,7 +372,7 @@
 			}
 			return r;
 		}
-		
+
 		/*
 		PrivateMethod: getElmSize
 			Gets the size of an element as {width: x, height:y}
@@ -676,7 +676,7 @@
 				parseIntFunc = parseInt,
 				parseFloatFunc = parseFloat;
 
-			if (match = colorRegex.exec(val)) { //rgb() format, cater for percentages
+			if ((match = colorRegex.exec(val))) { //rgb() format, cater for percentages
 				r = match[2] ? mathRound(((parseFloatFunc(match[1]) / 100) * 255)) : parseIntFunc(match[1]);
 				g = match[4] ? mathRound(((parseFloatFunc(match[3]) / 100) * 255)) : parseIntFunc(match[3]);
 				b = match[6] ? mathRound(((parseFloatFunc(match[5]) / 100) * 255)) : parseIntFunc(match[5]);
@@ -738,7 +738,7 @@
 
 			for (; i < length; i++) {
 				nextTmp = nodelist[i];
-				while (nextTmp = nextTmp[dir + "Sibling"]) {
+				while ((nextTmp = nextTmp[dir + "Sibling"])) {
 					if (nextTmp.nodeType == 1 && nextTmp.nodeName != "!") {
 						ret[ri++] = nextTmp;
 						break;
@@ -867,7 +867,7 @@
 		r.parseCssColor = function(cssColor) {
 			var normal = normaliseCssColor(cssColor);
 			return {r: normal.r, g: normal.g, b: normal.b};
-		}
+		};
 
 		/**
 		@name glow.dom.NodeList
@@ -974,7 +974,7 @@
 			@description Calls a function for each node.
 
 				The supplied function will be called for each node in the NodeList.
-				
+
 				The index of the node will be provided as the first parameter, and
 				'this' will refer to the node.
 
@@ -1041,10 +1041,10 @@
 			*/
 			isWithin: function (node) {
 				if (node.push) { node = node[0]; }
-				
+
 				// missing some nodes? Return false
 				if ( !node || !this.length ) { return false; }
-				
+
 				var that = this,
 					i = 0,
 					length = that.length,
@@ -1065,7 +1065,7 @@
 				} else { //manual method
 					for (; i < length; i++) {
 						toTest = that[i];
-						while (toTest = toTest.parentNode) {
+						while ((toTest = toTest.parentNode)) {
 							if (toTest == node) { break; }
 						}
 						if (!toTest) { return false; }
@@ -1197,9 +1197,9 @@
 			@name glow.dom.NodeList#hasAttr
 			@function
 			@description Does the node have a particular attribute?
-				
+
 				The first node in the NodeList is tested
-				
+
 			@param {String} name The name of the attribute to test for.
 
 			@returns {Boolean}
@@ -1214,8 +1214,7 @@
 					attributes = firstNode.attributes;
 
 				if (isXml(firstNode) && env.ie) { //getAttributeNode not supported for XML
-					var attributes = firstNode.attributes,
-						i = 0,
+					var i = 0,
 						len = attributes.length;
 
 					//named node map doesn't seem to work properly, so need to go by index
@@ -1327,10 +1326,10 @@
 				var i = this.length,
 					paddedClassName,
 					paddedName = " " + name + " ";
-					
+
 				while (i--) {
 					paddedClassName = " " + this[i].className + " ";
-					
+
 					if (paddedClassName.indexOf(paddedName) != -1) {
 						this[i].className = paddedClassName.replace(paddedName, " ");
 					} else {
@@ -1473,7 +1472,7 @@
 						formElement = formElements[i];
 						nodeName = formElement.nodeName.toLowerCase();
 						name = formElement.name;
-						
+
 						// fieldsets & objects come back as form elements, but we don't care about these
 						// we don't bother with fields that don't have a name
 						// switch to whitelist?
@@ -1757,10 +1756,10 @@
 			@description Filter the NodeList using a function
 
 				The supplied function will be called for each node in the NodeList.
-				
+
 				The index of the node will be provided as the first parameter, and
 				'this' will refer to the node.
-				
+
 				Return true to keep the node, or false to remove it.
 
 			@param {Function} func Function to test each node
@@ -1808,7 +1807,7 @@
 					n = 0,
 					length = this.length,
 					childTmp;
-				
+
 				for (; i < length; i++) {
 					ret = ret.concat( getChildElms(this[i]) );
 				}
@@ -1879,9 +1878,9 @@
 			@name glow.dom.NodeList#is
 			@function
 			@description Tests if all the nodes match a CSS selector.
-			
+
 				Jake: I'm deprecating this until we have time to make it faster (probably when we change our CSS selector engine)
-			
+
 			@deprecated
 			@param {String} selector A CSS selector string
 
@@ -1971,7 +1970,7 @@
 				*/
 				var i = 0,
 					len = this.length;
-					
+
 				for (; i < len; i++) {
 					while(this[i].firstChild) {
 						this[i].removeChild(this[i].firstChild);
@@ -1986,7 +1985,7 @@
 			@description Removes each node from its parent node.
 				If you no longer need the nodes, consider using
 				{@link glow.dom.NodeList#destroy destroy}
-				
+
 			@returns {glow.dom.NodeList}
 
 			@example
@@ -1995,13 +1994,13 @@
 			*/
 			remove: function () {
 				for (var that = this, i = 0, length = that.length, parentNode; i < length; i++) {
-					if (parentNode = that[i].parentNode) {
+					if ((parentNode = that[i].parentNode)) {
 						parentNode.removeChild(that[i]);
 					}
 				}
 				return that;
 			},
-			
+
 			/**
 			@name glow.dom.NodeList#destroy
 			@function
@@ -2027,9 +2026,9 @@
 			@name glow.dom.NodeList#clone
 			@function
 			@description Gets a new NodeList containing a clone of each node.
-			
+
 			@param {Boolean} [cloneListeners=false] Also clone any event listeners assigned using Glow
-			
+
 			@returns {glow.dom.NodeList}
 
 				Returns a new NodeList containing clones of all the nodes in
@@ -2038,9 +2037,9 @@
 			@example
 				// get a copy of all heading elements
 				var myClones = glow.dom.get("h1, h2, h3, h4, h5, h6").clone();
-				
+
 			@example
-				// get a copy of all anchor elements with 
+				// get a copy of all anchor elements with
 				var myAnchors = glow.dom.get("a").clone(true);
 			*/
 			clone: function (cloneListeners) {
@@ -2052,7 +2051,7 @@
 				while (i--) {
 					ret[i] = this[i].cloneNode(true);
 				}
-				
+
 				// some browsers (ie) also clone node properties as attributes
 				// we need to get rid of the eventId.
 				if (nodePropertiesCloned && !isXml(ret[0])) {
@@ -2062,7 +2061,7 @@
 						allCloneElms[i][eventIdProp] = null;
 					}
 				}
-				
+
 				// shall we clone events too?
 				if (cloneListeners) {
 					// check the stuff we need is hanging around, we don't want
@@ -2071,13 +2070,13 @@
 					if ( !glow.events ) {
 						throw "glow.events required to clone event listeners";
 					}
-					
+
 					glow.events._copyListeners(
 						this.get("*").push( this ),
 						allCloneElms || r.get( ret ).get("*").push( ret )
 					);
 				}
-				
+
 				return r.get(ret);
 			},
 
@@ -2360,7 +2359,7 @@
 					prop = toStyleProp(prop);
 					for (; i < len; i++) {
 						thisStyle = that[i].style;
-						
+
 						if (typeof val == "number" && hasUnits.test(originalProp)) {
 							val = val.toString() + "px";
 						}
@@ -2378,7 +2377,7 @@
 					}
 					return that;
 				} else { //getting stuff
-					if (!len) { return; }
+					if (!len) { return undefined; }
 					return getCssValue(that[0], prop);
 				}
 			},
@@ -2387,7 +2386,7 @@
 			@name glow.dom.NodeList#offset
 			@function
 			@description Gets the offset from the top left of the document.
-			
+
 				If the NodeList contains multiple items, the offset of the
 				first item is returned.
 
@@ -2456,7 +2455,7 @@
 							offsetParentBeforeBody = elm;
 						}
 
-					} while (elm = elm.offsetParent);
+					} while ((elm = elm.offsetParent));
 
 					//deduct all the scroll offsets
 					elm = originalElm;
@@ -2797,7 +2796,7 @@
 					this.after(placeholderElm).remove();
 					r.get("u.glow-placeholder").after(nodeSpec).remove();
 				} else {
-					this.after(nodeSpec).remove()
+					this.after(nodeSpec).remove();
 				}
 				return this;
 			},
@@ -2854,16 +2853,16 @@
 						sLastSelector = sSelector;
 
 						//start by getting the scope (combinator)
-						if (aRx = cssRegex.combinator.exec(sSelector)) {
+						if ((aRx = cssRegex.combinator.exec(sSelector))) {
 							comb = aRx[1];
 							sSelector = sSelector.slice(aRx[0].length);
 						}
 						//look for optimal id & tag searching
-						if (aRx = cssRegex.tagName.exec(sSelector)) {
+						if ((aRx = cssRegex.tagName.exec(sSelector))) {
 							tagTmp = aRx[1];
 							sSelector = sSelector.slice(aRx[0].length);
 						}
-						if (aRx = cssRegex.classNameOrId.exec(sSelector)) {
+						if ((aRx = cssRegex.classNameOrId.exec(sSelector))) {
 							if (aRx[1] == "#") {
 								idTmp = aRx[2];
 								sSelector = sSelector.slice(aRx[0].length);
@@ -2893,7 +2892,7 @@
 						while (matchedCondition) {
 							//look for class or ID
 							if (sSelector.charAt(0) == "#" || sSelector.charAt(0) == ".") {
-								if (aRx = cssRegex.classNameOrId.exec(sSelector)) {
+								if ((aRx = cssRegex.classNameOrId.exec(sSelector))) {
 									if (sSelector.charAt(0) == "#") { //is ID
 										//define ID, remove escape chars
 										r[ri++] = [hasId, [aRx[2].replace(/\\/g, ""), null]];
@@ -2980,7 +2979,7 @@
 					var r = [],
 						i = 0,
 						len = context.length;
-						
+
 					for (; i < len; i++) {
 						append( r, getChildElms(context[i]) );
 					}

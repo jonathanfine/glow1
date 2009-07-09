@@ -286,14 +286,15 @@
 		*/
 		r.loadScript = function(url, opts) {
 			//id of the request
+			opts = populateOptions(opts);
+		    url = opts.useCache ? url : noCacheUrl(url);
+
 			var newIndex = scriptElements.length,
 				//script element that gets inserted on the page
 				script,
 				//generated name of the callback, may not be used
 				callbackName = callbackPrefix + newIndex,
-				opts = populateOptions(opts),
 				request = new Request(newIndex, opts),
-				url = opts.useCache ? url : noCacheUrl(url),
 				//the global property used to hide callbacks
 				globalObject = window[globalObjectName] || (window[globalObjectName] = {});
 
@@ -311,7 +312,7 @@
 					script = scriptElements[newIndex] = globalObject[callbackName] = undefined;
 					delete globalObject[callbackName];
 					delete scriptElements[newIndex];
-				}
+				};
 				url = glow.lang.interpolate(url, {callback: globalObjectName + "." + callbackName});
 			}
 
@@ -348,7 +349,7 @@
 			});
 
 			return request;
-		}
+		};
 
 		/**
 		 *	@name glow.net.abortRequest
@@ -385,7 +386,7 @@
 		 * @description Returned by {@link glow.net.post post}, {@link glow.net.get get} async requests and {@link glow.net.loadScript loadScript}
 		 * @glowPrivateConstructor There is no direct constructor, since {@link glow.net.post post} and {@link glow.net.get get} create the instances.
 		 */
-		 
+
 		/**
 		 * @name glow.net.Request#event:load
 		 * @event
@@ -395,7 +396,7 @@
 		 *   with an HTTP code of 2xx. loadScript requests will fire 'load' only
 		 *   if {callback} is used in the URL.
 		 */
-		 
+
 		/**
 		 * @name glow.net.Request#event:abort
 		 * @event
@@ -407,7 +408,7 @@
 		 * @see <a href="../furtherinfo/net/net.shtml">Using glow.net</a>
 		 * @glowPrivateConstructor There is no direct constructor, since {@link glow.net.post glow.net.post} and {@link glow.net.get glow.net.get} create the instances.
 		 */
-		 
+
 		/**
 		 * @name glow.net.Request#event:error
 		 * @event
@@ -417,8 +418,8 @@
 		 *   with an HTTP code which isn't 2xx or the request times out. loadScript
 		 *   calls will fire 'error' only if the request times out.
 		 */
-		 
-		 
+
+
 		/*
 		 We don't want users to create instances of this class, so the constructor is documented
 		 out of view of jsdoc
@@ -448,7 +449,7 @@
 			 * @example
 				// request.complete with an asynchronous call
 				var request = glow.net.get(
-					"myFile.html", 
+					"myFile.html",
 					{
 						async: true,
 						onload: function(response) {
@@ -483,7 +484,7 @@
 				 *   Also, this will be undefined if the request originated from loadScript.
 				 * @example
 				var request = glow.net.get(
-					"myFile.html", 
+					"myFile.html",
 					{
 						async: true,
 						onload: function(response) {
@@ -512,7 +513,7 @@
 				This is done automatically unless the defer option is set
 			@example
 				var request = glow.net.get(
-					"myFile.html", 
+					"myFile.html",
 					{
 						onload : function(response) {alert("Loaded");},
 						defer: true
@@ -533,7 +534,7 @@
 			 *		may still be loaded but	the callback will not be fired.
 			 * @example
 				var request = glow.net.get(
-					"myFile.html", 
+					"myFile.html",
 					{
 						async: true,
 						defer: true,
@@ -675,7 +676,7 @@
 			statusText: function() {
 				return this.timedOut ? "Request Timeout" : this.nativeResponse.statusText;
 			}
-		})
+        });
 
 		glow.net = r;
 	}

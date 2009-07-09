@@ -154,6 +154,7 @@ pseudoClasses["link"] = function($element) {
 	if ($document.links) for (var i = 0; i < $document.links.length; i++) {
 		if ($document.links[i] == $element) return true;
 	}
+    return undefined;
 };
 
 pseudoClasses["visited"] = function($element) {
@@ -249,7 +250,7 @@ var getTextContent = function($element) {
 function _msie_selectById($results, $from, id) {
 	var $match, i, j;
 	for (i = 0; i < $from.length; i++) {
-		if ($match = $from[i].all.item(id)) {
+		if (($match = $from[i].all.item(id))) {
 			if ($match.id == id) $results.push($match);
 			else if ($match.length != null) {
 				for (j = 0; j < $match.length; j++) {
@@ -317,7 +318,7 @@ var parseSelector = function($selector) {
 };
 
 var Quote = {
-	toString: function() {return "'"},
+	toString: function() {return "'";},
 	match: /^('[^']*')|("[^"]*")$/,
 	test: function($string) {
 		return this.match.test($string);

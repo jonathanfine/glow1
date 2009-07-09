@@ -6,9 +6,9 @@ t.test("glow.net.get async", function() {
 	} else {
 		t.expect(9);
 	}
-	
+
 	t.stop();
-	
+
 	var getRef = glow.net.get("testdata/xhr/basictext.txt", {
 		onLoad: function(response) {
 			t.ok(true, "correct callback used");
@@ -28,7 +28,7 @@ t.test("glow.net.get async", function() {
 		}
 	});
 	t.ok(!getRef.completed, "Request not completed");
-	
+
 	t.equals(typeof getRef.abort, "function", "Return object has abort method");
 });
 
@@ -38,7 +38,7 @@ t.test("glow.net.get sync", function() {
 	} else {
 		t.expect(6);
 	}
-	
+
 	var response = glow.net.get("testdata/xhr/basictext.txt", {
 		onLoad: function() {
 			t.ok(true, "correct callback used");
@@ -55,7 +55,7 @@ t.test("glow.net.get sync", function() {
 		t.equals(response.header("Content-Type"), "text/plain", "Content-Type header");
 	}
 	t.equals(response.text(), "XHR Test Document", "Returned text");
-	
+
 });
 
 t.test("glow.net.get aync header setting", function() {
@@ -69,7 +69,7 @@ t.test("glow.net.get aync header setting", function() {
 		onLoad: function(response) {
 			if (/^<!--#printEnv -->/.test(response.text())) {
 				t.start();
-				t.skip("This test requires a web server running mod_include in shtml files");	
+				t.skip("This test requires a web server running mod_include in shtml files");
 			}
 			t.ok(true, "correct callback used");
 			t.ok(/REQUEST_METHOD=GET/.test(response.text()), "Using get method");
@@ -123,10 +123,10 @@ t.test("glow.net.get async json", function() {
 
 t.test("glow.net.abort", function() {
 	t.expect(2);
-	
+
 	t.stop();
 	var aborted = true;
-	
+
 	var request = glow.net.get("testdata/xhr/large.txt", {
 		onLoad: function(response) {
 			aborted = false;
@@ -139,7 +139,7 @@ t.test("glow.net.abort", function() {
 		}
 	});
 	request.abort();
-	
+
 	//wait a moment to be sure
 	window.setTimeout(function() {
 		t.ok(aborted, "Request aborted");
@@ -156,7 +156,7 @@ t.test("glow.net.post aync string", function() {
 			onLoad: function(response) {
 				if (/^<!--#printEnv -->/.test(response.text())) {
 					t.start();
-					t.skip("This test requires a web server running mod_include in shtml files");	
+					t.skip("This test requires a web server running mod_include in shtml files");
 				}
 				t.ok(true, "correct callback used");
 				t.equals(/REQUEST_METHOD=(\w+)/.exec(response.text())[1], "POST", "Using post method");
@@ -180,7 +180,7 @@ t.test("glow.net.post aync json", function() {
 			onLoad: function(response) {
 				if (/^<!--#printEnv -->/.test(response.text())) {
 					t.start();
-					t.skip("This test requires a web server running mod_include in shtml files");	
+					t.skip("This test requires a web server running mod_include in shtml files");
 				}
 				t.ok(true, "correct callback used");
 				t.equals(/REQUEST_METHOD=(\w+)/.exec(response.text())[1], "POST", "Using post method");
@@ -199,7 +199,7 @@ t.test("glow.net.get defering and multiple load events", function() {
 	t.expect(2);
 	t.stop();
 	var loadCallbacks = 0;
-	
+
 	var request = glow.net.get("testdata/xhr/basictext.txt", {
 		onLoad: function() {
 			t.ok(true, "Option load event fired");
@@ -212,7 +212,7 @@ t.test("glow.net.get defering and multiple load events", function() {
 		},
 		defer: true
 	});
-	
+
 	//wait a moment, let's see if the request has really defered
 	window.setTimeout(function() {
 		glow.events.addListener(request, "load", function() {
@@ -229,7 +229,7 @@ t.test("glow.net.get defering and multiple error events", function() {
 	t.expect(2);
 	t.stop();
 	var errorCallbacks = 0;
-	
+
 	var request = glow.net.get("testdata/xhr/no_such_file", {
 		onLoad: function() {
 			t.ok(false, "Option load event fired");
@@ -242,7 +242,7 @@ t.test("glow.net.get defering and multiple error events", function() {
 		},
 		defer: true
 	});
-	
+
 	//wait a moment, let's see if the request has really defered
 	window.setTimeout(function() {
 		glow.events.addListener(request, "error", function() {
@@ -294,7 +294,7 @@ for (var i = 1; i < 5; i++) {
 						t.start();
 					}
 				});
-			})
+			});
 		});
 	})(i);
 }
@@ -303,9 +303,9 @@ for (var i = 1; i < 5; i++) {
 t.test("glow.net.get timeout cancelling", function() {
 	t.expect(2);
 	t.stop();
-	
+
 	var noError = true;
-	
+
 	glow.net.get("testdata/xhr/basictext.txt", {
 		onLoad: function() {
 			t.ok(true, "load called");
@@ -315,9 +315,9 @@ t.test("glow.net.get timeout cancelling", function() {
 		},
 		timeout: 2
 	});
-	
+
 	window.setTimeout(function () {
-		t.ok(noError, "onError not called")
+		t.ok(noError, "onError not called");
 		t.start();
 	}, 3000);
 });
@@ -336,7 +336,7 @@ t.test("glow.net.loadScript general", function() {
 	t.expect(3);
 	t.stop();
 	var timeoutCancelled = true;
-	
+
 	glow.net.loadScript("testdata/xhr/jsoncallback.js?callback={callback}", {
 		onLoad: function(data) {
 			t.ok(true, "Callback called");
@@ -347,9 +347,9 @@ t.test("glow.net.loadScript general", function() {
 		},
 		timeout: 2
 	});
-	
+
 	window.setTimeout(function () {
-		t.ok(timeoutCancelled, "onError not called")
+		t.ok(timeoutCancelled, "onError not called");
 		t.start();
 	}, 3000);
 });
@@ -358,9 +358,9 @@ t.test("glow.net.loadScript timeout and charset", function() {
 	clearScriptsFromEnd();
 	t.expect(3);
 	t.stop();
-	
+
 	var onLoadCalled = false;
-	
+
 	//this script doesn't actually callback, so it'll timeout
 	glow.net.loadScript("testdata/xhr/loadscriptfail.js?callback={callback}", {
 		onLoad: function(data) {
@@ -374,7 +374,7 @@ t.test("glow.net.loadScript timeout and charset", function() {
 		timeout: 2,
 		charset: "utf-8"
 	});
-	
+
 	t.equals(glow.dom.get(document.body.lastChild).attr("charset"), "utf-8", "Charset set");
 });
 
@@ -385,7 +385,7 @@ t.test("glow.net.loadScript aborting", function() {
 	var onLoadCalled = false;
 	var onErrorCalled = false;
 	var onAbortCalled = false;
-	
+
 	var request = glow.net.loadScript("testdata/xhr/jsoncallback.js?callback={callback}", {
 		onLoad: function(data) {
 			onLoadCalled = true;
@@ -402,11 +402,11 @@ t.test("glow.net.loadScript aborting", function() {
 		t.skip("Request complete, too late to abort");
 	}
 	request.abort();
-	
+
 	window.setTimeout(function () {
 		t.ok(!onLoadCalled, "onLoad not called");
 		t.ok(!onErrorCalled, "onError not called");
 		t.ok(onAbortCalled, "onAbort called");
 		t.start();
 	}, 3000);
-})
+});

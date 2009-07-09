@@ -75,7 +75,7 @@
 			*/
 			//check gloader to see if dom is already ready
 			isDomReady: window.gloader && gloader.isReady,
-			
+
 			/**
 			@name glow.isReady
 			@description Is Glow ready?
@@ -155,7 +155,7 @@
 					khtml   : toNum(khtml),
 					version : ie || gecko || webkit || opera || khtml,
 					standardsMode : document.compatMode != "BackCompat" && (!ie || ie >= 6)
-				}
+				};
 			}(),
 
 			/**
@@ -235,7 +235,7 @@
 			@name glow.ready
 			@function
 			@description Calls a function when the DOM had loaded and the browser is supported
-			
+
 				"ready" also waits for glow's CSS file to load if it has been
 				requested.
 
@@ -257,7 +257,7 @@
 				}
 				return this;
 			},
-			
+
 			/**
 			@name glow._readyBlockers
 			@private
@@ -266,7 +266,7 @@
 				True if they are blocking, false if they've since unblocked
 			*/
 			_readyBlockers: {},
-			
+
 			/**
 			@name glow._addReadyBlock
 			@private
@@ -281,7 +281,7 @@
 
 			@example
 				glow._addReadyBlock("widgetsCss");
-				
+
 				// when CSS is ready...
 				glow._removeReadyBlock("widgetsCss");
 			*/
@@ -294,7 +294,7 @@
 				blockersActive++;
 				return glow;
 			},
-			
+
 			/**
 			@name glow._removeReadyBlock
 			@private
@@ -307,7 +307,7 @@
 
 			@example
 				glow._addReadyBlock("widgetsCss");
-				
+
 				// when CSS is ready...
 				glow._removeReadyBlock("widgetsCss");
 			*/
@@ -708,7 +708,7 @@
 
 	//dom ready stuff
 	//run queued ready functions when DOM is ready
-	
+
 	function runDomReadyQueue() {
 		glow.isDomReady = true;
 		// run all functions in the array
@@ -716,7 +716,7 @@
 			domReadyQueue[i]();
 		}
 	}
-	
+
 	function runReadyQueue() {
 		// if we're already processing the queue, just exit, the other instance will take care of it
 		if (processingReadyQueue) return;
@@ -735,11 +735,11 @@
 		readyQueueLen = readyQueueLen - i;
 		processingReadyQueue = false;
 	}
-	
+
 	(function(){
 		//don't do this stuff if the dom is already ready
 		if (glow.isDomReady) { return; }
-		
+
 		glow._addReadyBlock("glow_domReady");
 		if (env.ie) {
 			if (typeof window.frameElement != 'undefined') {

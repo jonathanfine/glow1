@@ -30,7 +30,7 @@ elementFindMatchingChildren = function(element, selector) {
   }
 
   return matches.flatten();
-}
+};
 
 ELEMENT_NODE_TYPE = 1;
 
@@ -50,7 +50,7 @@ elementFindFirstMatchingChild = function(element, selector) {
     }
   }
   return null;
-}
+};
 
 elementFindFirstMatchingParent = function(element, selector) {
   var current = element.parentNode;
@@ -61,9 +61,9 @@ elementFindFirstMatchingParent = function(element, selector) {
     current = current.parentNode;
   }
   return current;
-}
+};
 
 elementFindMatchingChildById = function(element, id) {
-  return elementFindFirstMatchingChild(element, function(element){return element.id==id} );
-}
+    return elementFindFirstMatchingChild(element, function(element){return element.id==id;} );
+};
 

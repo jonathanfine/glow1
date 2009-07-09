@@ -12,7 +12,7 @@ t.test("Load DOM", function() {
 t.test("Set up", function() {
 	//how many asserts you're expecting
 	t.expect(1);
-	
+
 	try {
 		window.testForm = glow.dom.create('<div>\
 			<p id="formTestOutput" style="border: solid 2px gray; padding: 8px; float: right; width: 40%;"></p> \
@@ -31,13 +31,13 @@ t.test("Set up", function() {
 			</fieldset> \
 			</form> \
 		</div>');
-		
+
 		testForm.appendTo("body");
-		
+
 		var myFormElem = glow.dom.get("#register");
 	}
 	catch(e){/*ignored*/}
-	
+
 	 t.ok(myFormElem, "A test form was created.");
 });
 
@@ -50,19 +50,19 @@ function resetFormsTestElement() {
 t.test("glow.forms.Form", function() {
 	//how many asserts you're expecting
 	t.expect(3);
-	
+
 	 t.ok(glow.forms, "Forms module exists");
 	 t.equals(typeof glow.forms.Form, "function", "glow.forms.Form is a function.");
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	try {
 		var myForm = new glow.forms.Form(myFormElem);
 	}
 	catch(e){/*ignored*/}
-	
+
 	 t.ok(myForm, "A new form instance can be created.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -71,12 +71,12 @@ t.test("glow.forms.Form", function() {
 
 t.test("glow.forms.Form#addTests", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
 	var myForm = new glow.forms.Form(myFormElem);
-	
+
 	 t.equals(typeof myForm.addTests, "function", "glow.forms.Form#addTests is a function.");
-	
+
 	try {
 		myForm
 		.addTests(
@@ -90,11 +90,11 @@ t.test("glow.forms.Form#addTests", function() {
 		);
 	}
 	catch(e){/*ignored*/}
-	
+
 	 t.equals(myForm._fields.length, 2, "Fields can be added to the form.");
 	 t.equals(myForm._fields[0].name, "username", "Field has a name.");
 	 t.equals(myForm._fields[1]._tests.length, 2, "Tests can be added to the field.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -102,9 +102,9 @@ t.test("glow.forms.Form#addTests", function() {
 
 t.test("glow.forms.Form#validate", function() {
 	t.expect(3);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
 
 	try {
@@ -112,9 +112,9 @@ t.test("glow.forms.Form#validate", function() {
 		glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
 	}
 	catch(e){/*ignored*/}
-	
+
 	 t.equals(typeof myForm.validate, "function", "glow.forms.Form#validate is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -125,15 +125,15 @@ t.test("glow.forms.Form#validate", function() {
 		["required"],
 		["isNumber"]
 	);
-	
+
 	try {
 		myForm.validate('submit');
 	}
 	catch(e){/*ignored*/}
-	
+
 	 t.ok(validateResults, "Results are passed to the validate function set in the opts object.");
 	 t.equals(validateResults.fields.length, 2, "Results has fields for each test added.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -141,11 +141,11 @@ t.test("glow.forms.Form#validate", function() {
 
 t.test("glow.forms events", function() {
 	t.expect(5);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
 
@@ -158,18 +158,18 @@ t.test("glow.forms events", function() {
 		"age",
 		["required", {on: "change"}]
 	);
-	
+
 	 t.equals(validateResults, undefined, "Initially validateResults is undefined.");
-	
-	var didSubmit = false
+
+	 var didSubmit = false;
 	glow.events.addListener(myFormElem, "submit", function(){ didSubmit = true; return false; });
 	glow.events.fire(myFormElem[0], "submit");
-	
+
 	 t.equals(didSubmit, true, "The test form was submitted.");
 	 t.ok(validateResults, "Once submitted validateResults is defined.");
 	 t.equals(validateResults.fields[0].name, "username", "The validateResults has a result for the test tied to the 'submit' event.");
 	 t.equals(validateResults.fields.length, 1, "The validateResults has no result for the test tied to the 'change' event.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -177,14 +177,14 @@ t.test("glow.forms events", function() {
 
 t.test("glow.forms conditional tests", function() {
 	t.expect(3);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	myForm.formNode.val({email: ""});
 	myForm
 	.addTests(
@@ -196,13 +196,13 @@ t.test("glow.forms conditional tests", function() {
 		["required", {field: "email"}],
 		["required"]
 	);
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.errorCount, 1, "When a conditional test fails the next test does not fail.");
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "Other field failed.");
 	 t.equals(validateResults.fields[1].result, glow.forms.SKIP, "This field skipped.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -210,16 +210,16 @@ t.test("glow.forms conditional tests", function() {
 
 t.test("glow.forms.tests.required", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.required, "function", "glow.forms.tests.require is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -233,19 +233,19 @@ t.test("glow.forms.tests.required", function() {
 		"email",
 		["required"]
 	);
-	
+
 	myForm.formNode.val({
 		username: "",
 		age: " ",
 		email: " x"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "Required fails on an empty value.");
 	 t.equals(validateResults.fields[1].result, glow.forms.FAIL, "Required fails on a spaces-only value.");
 	 t.equals(validateResults.fields[2].result, glow.forms.PASS, "Required passes on a value with non-space character.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -253,16 +253,16 @@ t.test("glow.forms.tests.required", function() {
 
 t.test("glow.forms.tests.isNumber", function() {
 	t.expect(5);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.isNumber, "function", "glow.forms.tests.isNumber is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -280,21 +280,21 @@ t.test("glow.forms.tests.isNumber", function() {
 		"email_confirm",
 		["isNumber"]
 	);
-	
+
 	myForm.formNode.val({
 		username: "",
 		age: "1..23",
 		email: ".",
 		email_confirm: "-01.20"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "isNumber fails on an empty value.");
 	 t.equals(validateResults.fields[1].result, glow.forms.FAIL, "isNumber fails on a malformed number.");
 	 t.equals(validateResults.fields[2].result, glow.forms.FAIL, "isNumber fails on a dot.");
 	 t.equals(validateResults.fields[3].result, glow.forms.PASS, "isNumber passes on a valid number.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -302,16 +302,16 @@ t.test("glow.forms.tests.isNumber", function() {
 
 t.test("glow.forms.tests.min and max", function() {
 	t.expect(5);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.range, "function", "glow.forms.tests.range is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -329,21 +329,21 @@ t.test("glow.forms.tests.min and max", function() {
 		"age",
 		["max", {arg: "1"}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "0",
 		age: ".5",
 		email: "0",
-		email_confirm: "0" 
+		email_confirm: "0"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.PASS, "min n == value n should pass.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "max n == value n should pass.");
 	 t.equals(validateResults.fields[2].result, glow.forms.PASS, "min n < value n should pass.");
 	 t.equals(validateResults.fields[3].result, glow.forms.PASS, "max n > value n should pass.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -352,16 +352,16 @@ t.test("glow.forms.tests.min and max", function() {
 
 t.test("glow.forms.tests.range", function() {
 	t.expect(6);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.range, "function", "glow.forms.tests.range is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -382,22 +382,22 @@ t.test("glow.forms.tests.range", function() {
 		"about",
 		["range", {arg: "11..100"}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "0",
 		age: "0",
 		email: "0",
-		email_confirm: "0",		about: "50" 
+		email_confirm: "0",		about: "50"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.PASS, "range from n to n should pass.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "range from n to n-1 should pass.");
 	 t.equals(validateResults.fields[2].result, glow.forms.PASS, "range from -n to n+2 should pass.");
 	 t.equals(validateResults.fields[3].result, glow.forms.PASS, "range from n.n to n.n should pass.");
 	 t.equals(validateResults.fields[4].result, glow.forms.PASS, "min and max should be compared as numbers not strings.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -405,16 +405,16 @@ t.test("glow.forms.tests.range", function() {
 
 t.test("glow.forms.tests.count", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.count, "function", "glow.forms.tests.count is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -428,17 +428,17 @@ t.test("glow.forms.tests.count", function() {
 		"announce",
 		["count", {arg: 1}]
 	);
-	
+
 	myForm.formNode.val({
 		username: ""
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "count fails to match 1 when text input is empty.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "count passes when test matches checked boxes.");
 	 t.equals(validateResults.fields[2].result, glow.forms.FAIL, "count fails when test matches checked boxes.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -447,16 +447,16 @@ t.test("glow.forms.tests.count", function() {
 
 t.test("glow.forms.tests.regex", function() {
 	t.expect(3);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.regex, "function", "glow.forms.tests.regex is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -466,17 +466,17 @@ t.test("glow.forms.tests.regex", function() {
 		"age",
 		["regex", {arg: '^[abc]+$'}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "banana",
 		age: "baabaa"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "regex fails when test doesn't match.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "regex passes when test does match.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -484,16 +484,16 @@ t.test("glow.forms.tests.regex", function() {
 
 t.test("glow.forms.tests.minLen", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.minLen, "function", "glow.forms.tests.minLen is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -507,19 +507,19 @@ t.test("glow.forms.tests.minLen", function() {
 		"email",
 		["minLen", {arg: 3}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "a",
 		age: "abc",
 		email: "abcd"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "minLen fails when value is too short.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "minLen passes when value is the same as the minimum.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "minLen passes when value is less than the minimum.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -527,16 +527,16 @@ t.test("glow.forms.tests.minLen", function() {
 
 t.test("glow.forms.tests.maxLen", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.maxLen, "function", "glow.forms.tests.maxLen is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -550,19 +550,19 @@ t.test("glow.forms.tests.maxLen", function() {
 		"email",
 		["maxLen", {arg: 3}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "abc",
 		age: "abc",
 		email: "ab"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "maxLen fails when value is too long.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "maxLen passes when value is the same as the maximum.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "maxLen passes when value is less than the maximum.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -570,16 +570,16 @@ t.test("glow.forms.tests.maxLen", function() {
 
 t.test("glow.forms.tests.isEmail", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.isEmail, "function", "glow.forms.tests.isEmail is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -593,19 +593,19 @@ t.test("glow.forms.tests.isEmail", function() {
 		"email",
 		["isEmail"]
 	);
-	
+
 	myForm.formNode.val({
 		username: "1abc-123@abc.a1-b2.xyz.co.uk",
 		age: "abc@abc@.com",
 		email: "abc123"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.PASS, "isEmail passes when value is valid email.");
 	 t.equals(validateResults.fields[1].result, glow.forms.FAIL, "isEmail fails when value is almost a valid email.");
 	 t.equals(validateResults.fields[1].result, glow.forms.FAIL, "isEmail fails when value is not a valid email.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -613,16 +613,16 @@ t.test("glow.forms.tests.isEmail", function() {
 
 t.test("glow.forms.tests.sameAs", function() {
 	t.expect(4);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.sameAs, "function", "glow.forms.tests.sameAs is a function.");
-	
+
 	myForm
 	.addTests(
 		"username",
@@ -636,15 +636,15 @@ t.test("glow.forms.tests.sameAs", function() {
 		"email_confirm",
 		["sameAs", {arg: "email_confirm"}]
 	);
-	
+
 	myForm.formNode.val({
 		username: "bert",
 		email: "bert@sesame.org",
 		email_confirm: "bert@sesame.org"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.FAIL, "sameAs fails when value are not the same.");
 	 t.equals(validateResults.fields[1].result, glow.forms.PASS, "sameAs passes when value are the same.");
 	 t.equals(validateResults.fields[2].result, glow.forms.PASS, "sameAs passes when test is same as the field.");
@@ -656,19 +656,19 @@ t.test("glow.forms.tests.sameAs", function() {
 
 t.test("glow.forms.tests.custom", function() {
 	t.expect(3);
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
 	glow.events.addListener(myForm, "validate", function(results){validateResults = results; return false; });
-	
+
 	 t.equals(typeof glow.forms.tests.custom, "function", "glow.forms.tests.custom is a function.");
-	
+
 	var myTest = function (values, opts, callback, formValues) {
 		var message = opts.message || "The value 'Fail' is not allowed.";
-		
+
 		for (var i = 0, len = values.length; i < len; i++) {
 			if (values[i] == "Fail") {
 				callback(glow.forms.FAIL, message);
@@ -676,8 +676,8 @@ t.test("glow.forms.tests.custom", function() {
 			}
 		}
 		callback(glow.forms.PASS, message);
-	}
-	
+	};
+
 	myForm
 	.addTests(
 		"username",
@@ -687,17 +687,17 @@ t.test("glow.forms.tests.custom", function() {
 		"age",
 		["custom", { arg: myTest }]
 	);
-	
+
 	myForm.formNode.val({
 		username: "Fred",
 		age: "Fail"
 	});
-	
+
 	myForm.validate('submit');
-	
+
 	 t.equals(validateResults.fields[0].result, glow.forms.PASS, "custom passes when value is valid.");
 	 t.equals(validateResults.fields[1].result, glow.forms.FAIL, "custom fails when value is not valid.");
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
@@ -706,29 +706,29 @@ t.test("glow.forms.tests.custom", function() {
 t.test("glow.forms.tests.ajax", function() {
 	t.expect(2);
 	t.stop();
-	
+
 	var myFormElem = glow.dom.get("#register");
-	
+
 	var validateResults;
-	
+
 	var myForm = new glow.forms.Form(myFormElem);
-	
+
 	myForm.formNode.val({
 		username: "AJ Acks",
 		age: "99"
 	});
-	
+
 	glow.events.addListener(myForm, "validate", function(results) {
 		 t.equals(results.fields[0].result, glow.forms.PASS, "ajax passes when url returns a value.");
-		
+
 		//clean up
 		resetFormsTestElement();
 		//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;
 		t.start();
 	});
-	
+
 	 t.equals(typeof glow.forms.tests.ajax, "function", "glow.forms.tests.ajax is a function.");
-	
+
 	var handleResponseText = function(/**glow.net.Response*/response) {
 		if (response.text() == "XHR Test Document") {
 			return glow.forms.PASS;
@@ -736,14 +736,14 @@ t.test("glow.forms.tests.ajax", function() {
 		else {
 			return glow.forms.FAIL;
 		}
-	}
+	};
 
 	myForm
 	.addTests(
 		"username",
 		["ajax", {arg: handleResponseText, url: "testdata/xhr/basictext.txt?name={username}&age={age}&pals={friend}"}]
 	);
-	
+
 	myForm.validate('submit');
 });
 
@@ -753,7 +753,7 @@ t.test("glow.forms manual tests", function() {
 		log: function (outputArea) {
 			return function(msg) {
 				outputArea.html(outputArea.html()+"<div style='padding: 4px; border-bottom: solid 1px #ccc;'>"+msg+"<"+"/div>");
-			}
+			};
 		}($("#formTestOutput"))
 		,
 		clear: function (outputArea) {
@@ -765,10 +765,10 @@ t.test("glow.forms manual tests", function() {
 				{
 					tween: glow.tweens.elasticIn()
 				}).start();
-			}
+			};
 		}($("#formTestOutput"))
 	};
-	
+
 	var myFormElem = $("#register");
 	var myForm = new glow.forms.Form(myFormElem);
 
@@ -824,7 +824,7 @@ t.test("glow.forms manual tests", function() {
 			writer.log("> form: "+glow.data.encodeUrl(results.form.formNode.val()));
 			writer.log(results.errorCount+" errors found.");
 			//writer.log("results.fields.length "+results.fields.length);
-			
+
 			var resultNames = ["SKIP", "FAIL", "PASS"];
 			for (var i = 0; i < results.fields.length; i++) {
 				var field = results.fields[i];
@@ -833,7 +833,7 @@ t.test("glow.forms manual tests", function() {
 			return (results.errorCount === 0);
 		}
 	);
-	
+
 	//clean up
 	resetFormsTestElement();
 	//myFormElem[0].parentNode.innerHTML = myFormElem[0].parentNode.innerHTML;

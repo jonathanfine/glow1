@@ -135,7 +135,7 @@ of &lt;body> which have class "glowNoMask" will be left as children of
 						clientWidth = win.width(),
 						noScroll = noScrollContainer.get("div"),
 						//get children which don't have class "glowNoMask"
-						bodyChildren = body.children().filter(function() { return (' ' + this.className + ' ').indexOf("glowNoMask") == -1 });
+					    bodyChildren = body.children().filter(function() { return (' ' + this.className + ' ').indexOf("glowNoMask") == -1; });
 
 					bodyProperties = {
 						margin: [body.css("margin-top"), body.css("margin-right"), body.css("margin-bottom"), body.css("margin-left")],
@@ -159,7 +159,7 @@ of &lt;body> which have class "glowNoMask" will be left as children of
 
 				function resizeMask() {
 					var bodyHeight = body.height();
-					
+
 					// we do this twice to catch scrollbars showing & hiding
 					for (var i = 0; i < 2; i++) {
 						that.maskElement.css("width", "100%").
